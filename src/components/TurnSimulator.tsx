@@ -74,7 +74,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle }: { plan: TurnPlan; ind
         {/* Summary badges */}
         <div className="flex items-center gap-1.5">
           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium">
-            <Zap size={9} className="text-accent" /> {plan.totalEnergy}/{plan.cards.length > 0 ? "2" : "0"}
+            <Zap size={9} className="text-accent" /> {plan.totalEnergy}/{gameState.energy}
           </span>
           {plan.totalDamage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">

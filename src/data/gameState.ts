@@ -105,6 +105,12 @@ export const sampleGameState: GameState = {
       description: "At the start of your turn, Summon 1.",
       effect: { type: "custom", description: "Start-of-turn Summon 1" },
     },
+    {
+      id: "new-leaf",
+      name: "New Leaf",
+      description: "Upon pickup, Transform 1 card.",
+      effect: { type: "custom", description: "Transform 1 card on pickup" },
+    },
   ],
   energy: 2,
   maxEnergy: 3,

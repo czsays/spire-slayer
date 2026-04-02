@@ -15,8 +15,14 @@ export interface BuffState {
 }
 
 export interface EnemyState {
+  id: string;
+  name: string;
+  hp: number;
+  maxHp: number;
+  block: number;
   vulnerable: number;
   weak: number;
+  strength: number;
 }
 
 // ── Relics ───────────────────────────────────────────────────────

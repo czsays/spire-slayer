@@ -126,7 +126,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
             )}
             {plan.totalBlock > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-skill">
-                <Shield size={9} /> {plan.totalBlock}
+                {plan.totalBlock} <Shield size={9} />
               </span>
             )}
             {plan.totalDraws > 0 && (

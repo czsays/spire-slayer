@@ -21,15 +21,13 @@
         "resizable": true,
         "fullscreen": false,
         "decorations": false,
-        "alwaysOnTop": true,
-        "transparent": true
+        "alwaysOnTop": true
       }
     ],
     "security": {
       "csp": "default-src 'self'; connect-src 'self' http://localhost:* https://localhost:*; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' asset: http://asset.localhost data:"
     }
   },
-  "macOSPrivateApi": true,
   "bundle": {
     "active": true,
     "targets": ["dmg", "app"],

@@ -204,9 +204,9 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
           </div>
         </div>
 
-        <div className="shrink-0 w-14 text-right">
-          <div className="text-xs font-bold font-display text-accent">
-            {card.drawOdds > 0 ? `${(card.drawOdds * 100).toFixed(1)}%` : "—"}
+        <div className="shrink-0 text-right">
+          <div className="text-xs font-bold font-display text-accent whitespace-nowrap">
+            {card.drawOdds > 0 ? `${Math.round(card.drawOdds * 100)}%` : "—"}
           </div>
         </div>
       </div>

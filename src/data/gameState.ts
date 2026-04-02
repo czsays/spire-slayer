@@ -310,8 +310,12 @@ export function computeCardEffects(
   if (state.player.dexterity !== 0 && blockMatch) {
     notes.push(`Dexterity ${state.player.dexterity > 0 ? "+" : ""}${state.player.dexterity} applied to block`);
   }
-  if (state.enemy.vulnerable > 0 && dmgMatch) {
-    notes.push(`Enemy Vulnerable (${state.enemy.vulnerable} turns) → +50% damage`);
+  const vulnEnemies = state.enemies.filter((e) => e.vulnerable > 0);
+  if (vulnEnemies.length > 0 && dmgMatch) {
+    vulnEnemies.forEach((e) => {
+      notes.push(`${e.name} Vulnerable (${e.vulnerable} turns) → +50% damage`);
+    });
+  }
   }
   if (state.player.weak > 0 && dmgMatch) {
     notes.push(`Player Weak (${state.player.weak} turns) → −25% damage`);

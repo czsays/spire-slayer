@@ -49,7 +49,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
   );
 }
 
-function TurnPlanCard({ plan, index, expanded, onToggle }: { plan: TurnPlan; index: number; expanded: boolean; onToggle: () => void }) {
+function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: TurnPlan; index: number; expanded: boolean; onToggle: () => void; maxEnergy: number }) {
   const labelColors: Record<string, string> = {
     "All-out Attack": "text-card-attack border-card-attack/30 bg-card-attack/5",
     "Full Defense": "text-card-skill border-card-skill/30 bg-card-skill/5",

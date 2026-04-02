@@ -49,7 +49,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
   );
 }
 
-function TurnPlanCard({ plan, index, expanded, onToggle }: { plan: TurnPlan; index: number; expanded: boolean; onToggle: () => void }) {
+function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: TurnPlan; index: number; expanded: boolean; onToggle: () => void; maxEnergy: number }) {
   const labelColors: Record<string, string> = {
     "All-out Attack": "text-card-attack border-card-attack/30 bg-card-attack/5",
     "Full Defense": "text-card-skill border-card-skill/30 bg-card-skill/5",
@@ -74,7 +74,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle }: { plan: TurnPlan; ind
         {/* Summary badges */}
         <div className="flex items-center gap-1.5">
           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium">
-            <Zap size={9} className="text-accent" /> {plan.totalEnergy}/{plan.cards.length > 0 ? "2" : "0"}
+            <Zap size={9} className="text-accent" /> {plan.totalEnergy}/{maxEnergy}
           </span>
           {plan.totalDamage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">
@@ -103,7 +103,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle }: { plan: TurnPlan; ind
           <div className="flex items-center gap-3 pt-1.5 px-1 border-t border-current/10">
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Total:</span>
             <span className="inline-flex items-center gap-0.5 text-[10px] font-bold">
-              <Zap size={9} className="text-accent" /> {plan.totalEnergy}E
+              <Zap size={9} className="text-accent" /> {plan.totalEnergy}/{maxEnergy}E
             </span>
             {plan.totalDamage > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack">
@@ -167,6 +167,7 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
           index={i}
           expanded={expandedIdx === i}
           onToggle={() => setExpandedIdx(expandedIdx === i ? null : i)}
+          maxEnergy={gameState.energy}
         />
       ))}
     </div>

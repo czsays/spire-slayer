@@ -141,7 +141,7 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
   const handCards = deck.filter((c) => c.pile === "hand");
   const combos = getCombinations(handCards, state.energy);
 
-  // Deduplicate by card name set (since we might have duplicate card instances)
+  // Deduplicate by card ID set
   const seen = new Set<string>();
   const uniqueCombos: DeckCard[][] = [];
   for (const combo of combos) {
@@ -151,6 +151,14 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
       uniqueCombos.push(combo);
     }
   }
+
+  // Only keep combos that use energy optimally: no unplayed card could fit in remaining energy
+  const maximalCombos = uniqueCombos.filter((combo) => {
+    const usedEnergy = combo.reduce((s, c) => s + c.cost, 0);
+    const remaining = state.energy - usedEnergy;
+    const usedIds = new Set(combo.map((c) => c.id));
+    return !handCards.some((c) => !usedIds.has(c.id) && c.cost <= remaining);
+  });
 
   // Build turn plans
   const plans: TurnPlan[] = uniqueCombos.map((combo, idx) => {

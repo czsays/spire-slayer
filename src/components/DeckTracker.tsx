@@ -400,8 +400,8 @@ export default function DeckTracker() {
   return (
     <div
       className={cn(
-        "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative overflow-hidden",
-        collapsed ? "w-10" : "w-[360px]"
+        "relative flex h-screen flex-shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 overflow-y-hidden",
+        collapsed ? "w-10" : "w-96"
       )}
     >
       <button
@@ -442,7 +442,6 @@ export default function DeckTracker() {
           <BuffsBar gameState={gameState} />
 
           <ScrollArea className="flex-1 w-full">
-            {/* Collapsible card list header */}
             <button
               onClick={() => setCardsExpanded(!cardsExpanded)}
               className="w-full flex items-center gap-2 px-3 py-2 border-b border-sidebar-border hover:bg-muted/30 transition-colors"
@@ -458,7 +457,7 @@ export default function DeckTracker() {
             </button>
 
             {cardsExpanded ? (
-              <div className="p-2 pr-4 flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 p-2 pr-6">
                 {grouped.map((card) => (
                   <MiniCard key={card.name} card={card} gameState={gameState} />
                 ))}

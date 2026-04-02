@@ -20,13 +20,10 @@ export const sampleDeck: DeckCard[] = [
   { id: "4", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "hand" },
   { id: "5", name: "Blight Strike", cost: 1, type: "attack", description: "Deal 8 damage. Apply Doom equal to damage dealt.", upgraded: false, pile: "hand" },
 
-  // Draw pile (remaining starter cards + early pickups)
-  { id: "6", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "draw" },
-  { id: "7", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "draw" },
-  { id: "8", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
-  { id: "9", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
-  { id: "10", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
-  { id: "11", name: "Unleash", cost: 1, type: "attack", description: "Deal damage equal to Osty's Summon.", upgraded: false, pile: "draw" },
-  { id: "12", name: "Afterlife", cost: 1, type: "skill", description: "Summon 6. Exhaust.", upgraded: false, pile: "draw" },
-  { id: "13", name: "Defile", cost: 1, type: "attack", description: "Deal 7 damage. Apply 3 Doom.", upgraded: false, pile: "draw" },
+  // Draw pile (5 cards remaining)
+  { id: "6", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
+  { id: "7", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
+  { id: "8", name: "Unleash", cost: 1, type: "attack", description: "Deal damage equal to Osty's Summon.", upgraded: false, pile: "draw" },
+  { id: "9", name: "Afterlife", cost: 1, type: "skill", description: "Summon 6. Exhaust.", upgraded: false, pile: "draw" },
+  { id: "10", name: "Defile", cost: 1, type: "attack", description: "Deal 7 damage. Apply 3 Doom.", upgraded: false, pile: "draw" },
 ];

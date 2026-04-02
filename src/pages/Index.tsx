@@ -9,7 +9,7 @@ const Index = () => {
         <img
           src={gameScreenshot}
           alt="Slay the Spire 2 gameplay"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-black"
         />
       </div>
     </div>

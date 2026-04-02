@@ -170,9 +170,11 @@ function EffectTooltip({ card, gameState, anchorRef }: { card: CardGroupEntry; g
 
 function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameState }) {
   const [hovered, setHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
+      ref={cardRef}
       className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -217,8 +219,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
         <span className="text-[11px] text-muted-foreground ml-auto">×{card.totalCount}</span>
       </div>
 
-      {/* Hover tooltip */}
-      {hovered && <EffectTooltip card={card} gameState={gameState} />}
+      {hovered && <EffectTooltip card={card} gameState={gameState} anchorRef={cardRef} />}
     </div>
   );
 }

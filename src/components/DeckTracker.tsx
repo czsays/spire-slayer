@@ -281,11 +281,6 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
     { label: "Frail", value: gameState.player.frail },
   ].filter((d) => d.value > 0);
 
-  const enemyDebuffs = [
-    { label: "Vuln", value: gameState.enemy.vulnerable },
-    { label: "Weak", value: gameState.enemy.weak },
-  ].filter((d) => d.value > 0);
-
   return (
     <div className="px-3 py-1.5 border-b border-sidebar-border space-y-1">
       {buffs.length > 0 && (
@@ -308,16 +303,28 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
           ))}
         </div>
       )}
-      {enemyDebuffs.length > 0 && (
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Enemy:</span>
-          {enemyDebuffs.map((d) => (
-            <span key={d.label} className="text-[11px] font-bold text-accent">
-              {d.label} ×{d.value}
-            </span>
-          ))}
-        </div>
-      )}
+      {gameState.enemies.map((enemy) => {
+        const eDebuffs = [
+          enemy.vulnerable > 0 && { label: "Vuln", value: enemy.vulnerable },
+          enemy.weak > 0 && { label: "Weak", value: enemy.weak },
+        ].filter(Boolean) as { label: string; value: number }[];
+        if (eDebuffs.length === 0) return null;
+        return (
+          <div key={enemy.id} className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{enemy.name}:</span>
+            {eDebuffs.map((d) => (
+              <span key={d.label} className="text-[11px] font-bold text-accent">
+                {d.label} ×{d.value}
+              </span>
+            ))}
+            {enemy.block > 0 && (
+              <span className="text-[11px] font-bold text-card-skill">
+                🛡 {enemy.block}
+              </span>
+            )}
+          </div>
+        );
+      })}
       {gameState.relics.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>

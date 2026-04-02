@@ -456,7 +456,7 @@ export default function DeckTracker() {
             </button>
 
             {cardsExpanded ? (
-              <div className="p-2 pr-3 flex flex-col gap-1.5">
+              <div className="p-2 pr-4 flex flex-col gap-1.5">
                 {grouped.map((card) => (
                   <MiniCard key={card.name} card={card} gameState={gameState} />
                 ))}

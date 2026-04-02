@@ -158,7 +158,7 @@ function calcDamage(base: number, state: GameState): { value: number; breakdown:
       dmg += r.effect.value;
       breakdown.push(`+${r.effect.value} (${r.name})`);
     }
-    if (r.effect.type === "vulnerableMultiplier" && state.enemy.vulnerable > 0) {
+    if (r.effect.type === "vulnerableMultiplier" && anyVulnerable) {
       // Replace default vulnerable calc — already applied above, but note it
       breakdown.push(`Vuln ×${r.effect.value} (${r.name})`);
     }

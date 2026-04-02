@@ -1,11 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
-import { sampleGameState, computeCardEffects, type GameState } from "@/data/gameState";
+import { sampleGameState, computeCardEffects, type GameState, type Relic } from "@/data/gameState";
 import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const pileConfig: Record<PileLocation, { label: string; icon: typeof Layers; colorClass: string }> = {
   draw: { label: "Draw Pile", icon: Layers, colorClass: "text-pile-draw" },
@@ -225,6 +224,46 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
   );
 }
 
+// ── Relic pill with portal tooltip ────────────────────────────────
+
+function RelicPill({ relic }: { relic: Relic }) {
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (hovered && ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      let top = rect.bottom + 6;
+      if (top + 80 > window.innerHeight) top = rect.top - 80;
+      setPos({ top, left: rect.left });
+    }
+  }, [hovered]);
+
+  return (
+    <>
+      <span
+        ref={ref}
+        className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-muted-foreground/20 transition-colors"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {relic.name}
+      </span>
+      {hovered && pos && createPortal(
+        <div
+          style={{ top: pos.top, left: pos.left }}
+          className="fixed z-[9999] w-56 rounded-lg border border-border bg-card shadow-xl shadow-black/40 p-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-150"
+        >
+          <p className="font-display text-xs font-semibold text-foreground">{relic.name}</p>
+          <p className="text-[11px] text-muted-foreground mt-1">{relic.description}</p>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
 // ── Buffs bar ────────────────────────────────────────────────────
 
 function BuffsBar({ gameState }: { gameState: GameState }) {
@@ -279,17 +318,7 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>
           {gameState.relics.map((r) => (
-            <Tooltip key={r.id}>
-              <TooltipTrigger asChild>
-                <span className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-accent transition-colors">
-                  {r.name}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="max-w-[200px] bg-card border-border text-foreground">
-                <p className="font-display text-xs font-semibold">{r.name}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">{r.description}</p>
-              </TooltipContent>
-            </Tooltip>
+            <RelicPill key={r.id} relic={r} />
           ))}
         </div>
       )}

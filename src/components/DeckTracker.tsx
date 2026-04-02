@@ -181,7 +181,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
   return (
     <div
       ref={cardRef}
-      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer overflow-hidden", typeColors[card.type])}
+      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -204,9 +204,9 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
           </div>
         </div>
 
-        <div className="shrink-0 w-12 text-right">
-          <div className="text-xs font-bold font-display text-accent">
-            {card.drawOdds > 0 ? `${(card.drawOdds * 100).toFixed(1)}%` : "—"}
+        <div className="shrink-0 text-right">
+          <div className="text-xs font-bold font-display text-accent whitespace-nowrap">
+            {card.drawOdds > 0 ? `${Math.round(card.drawOdds * 100)}%` : "—"}
           </div>
         </div>
       </div>
@@ -439,7 +439,7 @@ export default function DeckTracker() {
 
           <BuffsBar gameState={gameState} />
 
-          <ScrollArea className="flex-1 w-full overflow-hidden">
+          <ScrollArea className="flex-1 w-full">
             {/* Collapsible card list header */}
             <button
               onClick={() => setCardsExpanded(!cardsExpanded)}
@@ -456,7 +456,7 @@ export default function DeckTracker() {
             </button>
 
             {cardsExpanded ? (
-              <div className="p-2 pr-3 flex flex-col gap-1.5">
+              <div className="p-2 pr-4 flex flex-col gap-1.5">
                 {grouped.map((card) => (
                   <MiniCard key={card.name} card={card} gameState={gameState} />
                 ))}

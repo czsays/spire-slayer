@@ -112,7 +112,7 @@ export const sampleGameState: GameState = {
       effect: { type: "custom", description: "Transform 1 card on pickup" },
     },
   ],
-  energy: 2,
+  energy: 3,
   maxEnergy: 3,
 };
 

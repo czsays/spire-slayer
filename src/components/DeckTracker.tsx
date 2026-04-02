@@ -186,8 +186,16 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/30 border border-primary/50 flex items-center justify-center text-xs font-bold font-display text-primary-foreground">
-            {card.cost}
+          <span className="relative flex-shrink-0 w-6 h-6 flex items-center justify-center">
+            <svg width={22} height={22} viewBox="0 0 24 24" fill="none" className="absolute">
+              <polygon
+                points="12,2 22,7 22,17 12,22 2,17 2,7"
+                fill="hsl(330, 80%, 55%)"
+                stroke="hsl(330, 90%, 70%)"
+                strokeWidth="1.5"
+              />
+            </svg>
+            <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
           </span>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">

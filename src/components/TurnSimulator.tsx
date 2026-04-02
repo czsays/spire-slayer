@@ -117,7 +117,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
           <div className="flex items-center gap-3 pt-1.5 px-1 border-t border-current/10">
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Total:</span>
             <span className="inline-flex items-center gap-0.5 text-[10px] font-bold">
-              <EnergyHexagon size={9} /> {plan.totalEnergy}/{maxEnergy}E
+              {plan.totalEnergy}/{maxEnergy}E <EnergyHexagon size={9} />
             </span>
             {plan.totalDamage > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack">

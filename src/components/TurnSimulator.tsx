@@ -19,15 +19,8 @@ function EnergyHexagon({ size = 9 }: { size?: number }) {
 }
 
 function CardPlayRow({ play }: { play: CardPlay }) {
-  const borderClass =
-    play.cardType === "attack"
-      ? "border-card-attack/40"
-      : play.cardType === "skill"
-      ? "border-card-skill/40"
-      : "border-card-power/40";
-
   return (
-    <div className={cn("flex items-start gap-2 py-1.5 px-2 rounded border-l-2", borderClass, "bg-muted/30")}>
+    <div className="flex items-start gap-2 py-1.5 px-2 rounded border-l-2 border-current/30 bg-muted/30">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="relative w-4 h-4 flex items-center justify-center flex-shrink-0">

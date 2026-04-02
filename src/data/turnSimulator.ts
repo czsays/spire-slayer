@@ -184,7 +184,6 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState): TurnPlan[
 
   // First pass: one of each label
   for (const p of plans) {
-    if (picked.length >= count) break;
     if (!labelsSeen.has(p.label)) {
       labelsSeen.add(p.label);
       picked.push(p);
@@ -193,11 +192,10 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState): TurnPlan[
 
   // Second pass: fill remaining slots by score
   for (const p of plans) {
-    if (picked.length >= count) break;
     if (!picked.includes(p)) {
       picked.push(p);
     }
   }
 
-  return picked.slice(0, count);
+  return picked;
 }

@@ -152,7 +152,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
 }
 
 export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; gameState: GameState }) {
-  const plans = useMemo(() => generateTurnPlans(deck, gameState, 5), [deck, gameState]);
+  const plans = useMemo(() => generateTurnPlans(deck, gameState), [deck, gameState]);
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
 
   if (plans.length === 0) {

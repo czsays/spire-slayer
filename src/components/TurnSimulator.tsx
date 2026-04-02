@@ -54,67 +54,67 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
 
   return (
     <div
-      className="rounded-lg border overflow-hidden transition-colors"
+      className="overflow-hidden rounded-lg border transition-colors"
       style={{ borderColor, backgroundColor: bgColor, color: textColor }}
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-2 px-2.5 py-2 hover:bg-white/5 transition-colors"
+        className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 px-2.5 py-2 hover:bg-white/5 transition-colors"
       >
-        <span className="text-[10px] font-bold bg-current/10 rounded-full w-5 h-5 flex items-center justify-center opacity-60">
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10 text-[10px] font-bold opacity-60">
           {index + 1}
         </span>
-        <span className="text-[11px] font-display font-bold tracking-wide uppercase flex-1 text-left">
+        <span className="truncate text-left text-[11px] font-display font-bold tracking-wide uppercase">
           {plan.label}
         </span>
 
-        {/* Summary badges */}
-        <div className="flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium whitespace-nowrap">
             {plan.totalEnergy}/{maxEnergy} <EnergyIcon size={9} />
           </span>
           {plan.totalDamage > 0 && (
-            <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">
+            <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack whitespace-nowrap">
               {plan.totalDamage} <Swords size={9} />
             </span>
           )}
           {plan.totalBlock > 0 && (
-            <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-skill">
+            <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-skill whitespace-nowrap">
               {plan.totalBlock} <Shield size={9} />
             </span>
           )}
         </div>
 
-        {expanded ? <ChevronUp size={12} className="opacity-50" /> : <ChevronDown size={12} className="opacity-50" />}
+        <span className="flex shrink-0 items-center justify-center opacity-50">
+          {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        </span>
       </button>
 
       {expanded && (
-        <div className="px-2 pb-2 space-y-1 border-t border-current/10">
-          <div className="pt-1.5 space-y-1">
+        <div className="space-y-1 border-t border-current/10 px-2 pb-2">
+          <div className="space-y-1 pt-1.5">
             {plan.cards.map((card, i) => (
               <CardPlayRow key={i} play={card} />
             ))}
           </div>
 
-          {/* Turn totals */}
-          <div className="flex items-center gap-3 pt-1.5 px-1 border-t border-current/10">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-current/10 px-1 pt-1.5">
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Total:</span>
-            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold">
+            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold whitespace-nowrap">
               {plan.totalEnergy}/{maxEnergy}E <EnergyIcon size={9} />
             </span>
             {plan.totalDamage > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack">
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack whitespace-nowrap">
                 {plan.totalDamage} <Swords size={9} />
               </span>
             )}
             {plan.totalBlock > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-skill">
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-skill whitespace-nowrap">
                 {plan.totalBlock} <Shield size={9} />
               </span>
             )}
             {plan.totalDraws > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-pile-draw">
-                <Layers size={9} /> +{plan.totalDraws} cards
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-pile-draw whitespace-nowrap">
+                <Layers size={9} /> +{plan.totalDraws}
               </span>
             )}
           </div>
@@ -147,13 +147,13 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
   }
 
   return (
-    <div className="p-2 pr-3 space-y-1.5">
+    <div className="space-y-1.5 p-2 pr-6">
       <div className="flex items-center gap-2 px-1 pb-1">
         <Sparkles size={12} className="text-accent" />
         <span className="text-[10px] font-display font-bold text-muted-foreground uppercase tracking-wider">
           Turn Options
         </span>
-        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto flex-shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto flex-shrink-0 whitespace-nowrap">
           {gameState.energy} <EnergyIcon size={10} />
         </span>
       </div>

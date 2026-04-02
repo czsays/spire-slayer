@@ -92,7 +92,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
           </span>
           {plan.totalDamage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">
-              <Swords size={9} /> {plan.totalDamage}
+              {plan.totalDamage} <Swords size={9} />
             </span>
           )}
           {plan.totalBlock > 0 && (

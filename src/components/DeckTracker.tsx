@@ -374,6 +374,7 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
 
 export default function DeckTracker() {
   const [collapsed, setCollapsed] = useState(false);
+  const [cardsExpanded, setCardsExpanded] = useState(true);
   const deck = sampleDeck;
   const gameState = sampleGameState;
   const grouped = useMemo(() => groupCards(deck), [deck]);
@@ -383,6 +384,16 @@ export default function DeckTracker() {
     for (const c of deck) counts[c.pile]++;
     return counts;
   }, [deck]);
+
+  const cardSummary = useMemo(() => {
+    const attacks = grouped.filter((c) => c.type === "attack");
+    const skills = grouped.filter((c) => c.type === "skill");
+    const powers = grouped.filter((c) => c.type === "power");
+    const totalAttacks = attacks.reduce((s, c) => s + c.totalCount, 0);
+    const totalSkills = skills.reduce((s, c) => s + c.totalCount, 0);
+    const totalPowers = powers.reduce((s, c) => s + c.totalCount, 0);
+    return { totalAttacks, totalSkills, totalPowers };
+  }, [grouped]);
 
   return (
     <div
@@ -428,13 +439,40 @@ export default function DeckTracker() {
 
           <BuffsBar gameState={gameState} />
 
-
           <ScrollArea className="flex-1 w-full overflow-hidden">
-            <div className="p-2 pr-3 flex flex-col gap-1.5">
-              {grouped.map((card) => (
-                <MiniCard key={card.name} card={card} gameState={gameState} />
-              ))}
-            </div>
+            {/* Collapsible card list header */}
+            <button
+              onClick={() => setCardsExpanded(!cardsExpanded)}
+              className="w-full flex items-center gap-2 px-3 py-2 border-b border-sidebar-border hover:bg-muted/30 transition-colors"
+            >
+              <Layers size={12} className="text-muted-foreground" />
+              <span className="text-[10px] font-display font-bold text-muted-foreground uppercase tracking-wider">
+                Cards
+              </span>
+              <span className="text-[10px] text-muted-foreground ml-auto mr-1">
+                {deck.length}
+              </span>
+              {cardsExpanded ? <ChevronUp size={12} className="text-muted-foreground" /> : <ChevronDown size={12} className="text-muted-foreground" />}
+            </button>
+
+            {cardsExpanded ? (
+              <div className="p-2 pr-3 flex flex-col gap-1.5">
+                {grouped.map((card) => (
+                  <MiniCard key={card.name} card={card} gameState={gameState} />
+                ))}
+              </div>
+            ) : (
+              <div className="px-3 py-2 flex items-center gap-3 text-[11px]">
+                <span className="text-card-attack font-semibold">{cardSummary.totalAttacks} ATK</span>
+                <span className="text-card-skill font-semibold">{cardSummary.totalSkills} SKL</span>
+                {cardSummary.totalPowers > 0 && (
+                  <span className="text-card-power font-semibold">{cardSummary.totalPowers} PWR</span>
+                )}
+                <span className="text-muted-foreground ml-auto">
+                  {pileCounts.hand} in hand · {pileCounts.draw} draw
+                </span>
+              </div>
+            )}
 
             <div className="border-t border-sidebar-border">
               <TurnSimulator deck={deck} gameState={gameState} />

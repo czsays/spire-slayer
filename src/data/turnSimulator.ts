@@ -137,7 +137,7 @@ function scoreTurn(plan: TurnPlan): number {
 
 // ── Main API ─────────────────────────────────────────────────────
 
-export function generateTurnPlans(deck: DeckCard[], state: GameState): TurnPlan[] {
+export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5): TurnPlan[] {
   const handCards = deck.filter((c) => c.pile === "hand");
   const combos = getCombinations(handCards, state.energy);
 

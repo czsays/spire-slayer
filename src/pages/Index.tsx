@@ -1,5 +1,5 @@
 import DeckTracker from "@/components/DeckTracker";
-import gameScreenshot from "@/assets/game-screenshot.png";
+import gameScreenshot from "@/assets/game-screenshot.jpg";
 
 const Index = () => {
   return (

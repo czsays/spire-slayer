@@ -181,49 +181,51 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
   return (
     <div
       ref={cardRef}
-      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
+      className={cn("relative w-full rounded-md border-l-4 px-3 py-2 pr-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex items-center justify-between gap-2 min-w-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="relative flex-shrink-0 w-6 h-6 flex items-center justify-center">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
             <span className="absolute"><EnergyIcon size={22} /></span>
             <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
           </span>
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="font-card-title text-sm font-semibold text-foreground truncate">
+          <div className="min-w-0 flex-1">
+            <div className="flex min-w-0 items-center gap-1.5">
+              <span className="truncate font-card-title text-sm font-semibold text-foreground">
                 {card.name}
               </span>
-              <span className={cn("text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider font-bold", typeBadgeColors[card.type])}>
+              <span className={cn("shrink-0 rounded-sm px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", typeBadgeColors[card.type])}>
                 {card.type}
               </span>
             </div>
-            <p className="text-[11px] text-muted-foreground truncate">{card.description}</p>
+            <p className="truncate text-[11px] text-muted-foreground">{card.description}</p>
           </div>
         </div>
 
-        <div className="shrink-0 text-right">
-          <div className="text-xs font-bold font-display text-accent whitespace-nowrap">
+        <div className="shrink-0 pl-1 text-right">
+          <div className="whitespace-nowrap text-xs font-bold font-display text-accent">
             {card.drawOdds > 0 ? `${Math.round(card.drawOdds * 100)}%` : "—"}
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 mt-1.5">
-        {(Object.entries(card.piles) as [PileLocation, number][]).map(([pile, count]) => {
-          if (count === 0) return null;
-          const config = pileConfig[pile];
-          const Icon = config.icon;
-          return (
-            <span key={pile} className={cn("flex items-center gap-0.5 text-[11px]", config.colorClass)}>
-              <Icon size={11} />
-              <span className="font-medium">{count}</span>
-            </span>
-          );
-        })}
-        <span className="text-[11px] text-muted-foreground ml-auto">×{card.totalCount}</span>
+      <div className="mt-1.5 flex items-center gap-2 pr-1">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+          {(Object.entries(card.piles) as [PileLocation, number][]).map(([pile, count]) => {
+            if (count === 0) return null;
+            const config = pileConfig[pile];
+            const Icon = config.icon;
+            return (
+              <span key={pile} className={cn("flex items-center gap-0.5 text-[11px]", config.colorClass)}>
+                <Icon size={11} />
+                <span className="font-medium">{count}</span>
+              </span>
+            );
+          })}
+        </div>
+        <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">×{card.totalCount}</span>
       </div>
 
       {hovered && <EffectTooltip card={card} gameState={gameState} anchorRef={cardRef} />}

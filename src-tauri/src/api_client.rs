@@ -63,6 +63,11 @@ pub fn start_polling(app: AppHandle) {
                                                 .fetch_add(1, Ordering::SeqCst)
                                                 + 1;
 
+                                            info!(
+                                                "STS2MCP state received: type={:?}, version={}",
+                                                api_resp.state_type, new_version
+                                            );
+
                                             let app_state = AppGameState::from_api_response(
                                                 &api_resp,
                                                 new_version,
@@ -81,7 +86,7 @@ pub fn start_polling(app: AppHandle) {
                                             }
                                         }
                                         Err(e) => {
-                                            warn!("Failed to parse MCP response: {}", e);
+                                            error!("Failed to parse MCP response: {}", e);
                                         }
                                     }
                                 }

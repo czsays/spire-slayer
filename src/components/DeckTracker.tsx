@@ -1,9 +1,14 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import TurnSimulator from "@/components/TurnSimulator";
-import EnergyIcon from "@/components/EnergyIcon";
+import EnergyIcon, { characterToClass } from "@/components/EnergyIcon";
+import ConnectionStatus from "@/components/ConnectionStatus";
+import PlayerStatus from "@/components/PlayerStatus";
+import EnemyStatusList from "@/components/EnemyStatusList";
+import { useGameStateContext } from "@/contexts/GameStateContext";
+import { isTauri } from "@/lib/tauri";
 import { createPortal } from "react-dom";
-import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
-import { sampleGameState, computeCardEffects, type GameState, type Relic } from "@/data/gameState";
+import { type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
+import { computeCardEffects, type GameState, type Relic } from "@/data/gameState";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -96,11 +101,13 @@ function EffectTooltip({ card, gameState, anchorRef }: { card: CardGroupEntry; g
       const rect = anchorRef.current.getBoundingClientRect();
       const tooltipHeight = 200; // estimate
       let top = rect.top;
-      // Keep tooltip on screen
+      // Keep tooltip on screen vertically
       if (top + tooltipHeight > window.innerHeight) {
         top = window.innerHeight - tooltipHeight - 8;
       }
-      setPos({ top, left: rect.right + 8 });
+      if (top < 8) top = 8;
+      // Position to the right of the sidebar (400px) in the transparent overflow area
+      setPos({ top, left: 408 });
     }
   }, [anchorRef]);
 
@@ -174,7 +181,7 @@ function EffectTooltip({ card, gameState, anchorRef }: { card: CardGroupEntry; g
 }
 // ── Mini card with hover ─────────────────────────────────────────
 
-function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameState }) {
+function MiniCard({ card, gameState, playerClass }: { card: CardGroupEntry; gameState: GameState; playerClass: ReturnType<typeof characterToClass> }) {
   const [hovered, setHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -188,7 +195,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <span className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
-            <span className="absolute"><EnergyIcon size={22} /></span>
+            <span className="absolute"><EnergyIcon size={22} playerClass={playerClass} /></span>
             <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
           </span>
           <div className="min-w-0 flex-1">
@@ -377,9 +384,16 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
 export default function DeckTracker() {
   const [collapsed, setCollapsed] = useState(false);
   const [cardsExpanded, setCardsExpanded] = useState(true);
-  const deck = sampleDeck;
-  const gameState = sampleGameState;
+  const { gameState, deck, extended } = useGameStateContext();
   const grouped = useMemo(() => groupCards(deck), [deck]);
+  const playerClass = characterToClass(extended.character);
+
+  const startDrag = useCallback(async (e: React.MouseEvent) => {
+    if (!isTauri()) return;
+    e.preventDefault();
+    const { getCurrentWindow } = await import("@tauri-apps/api/window");
+    getCurrentWindow().startDragging();
+  }, []);
 
   const pileCounts = useMemo(() => {
     const counts: Record<PileLocation, number> = { draw: 0, hand: 0, discard: 0, exhaust: 0 };
@@ -399,32 +413,14 @@ export default function DeckTracker() {
 
   return (
     <div
-      className={cn(
-        "relative flex h-screen flex-shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 overflow-y-hidden",
-        collapsed ? "w-10" : "w-96"
-      )}
+      className="relative flex h-screen w-full flex-col bg-sidebar border-r border-sidebar-border overflow-y-hidden"
     >
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute right-1 top-4 z-10 w-6 h-6 rounded-full bg-secondary border border-border flex items-center justify-center hover:bg-accent transition-colors"
-      >
-        {collapsed ? <ChevronRight size={14} className="text-foreground" /> : <ChevronLeft size={14} className="text-foreground" />}
-      </button>
-
-      {collapsed ? (
-        <div className="flex flex-col items-center pt-12 gap-2">
-          <Layers size={16} className="text-pile-draw" />
-          <span className="text-[10px] text-muted-foreground">{pileCounts.draw}</span>
-          <Archive size={16} className="text-pile-discard" />
-          <span className="text-[10px] text-muted-foreground">{pileCounts.discard}</span>
-          <Trash2 size={16} className="text-pile-exhaust" />
-          <span className="text-[10px] text-muted-foreground">{pileCounts.exhaust}</span>
-        </div>
-      ) : (
         <>
-          <div className="p-3 border-b border-sidebar-border">
-            <h1 className="font-display text-sm font-bold text-foreground tracking-wide uppercase">Deck Tracker</h1>
-            <div className="flex items-center gap-3 mt-2">
+          <ConnectionStatus />
+
+          <div className="p-3 border-b border-sidebar-border cursor-grab active:cursor-grabbing" onMouseDown={startDrag}>
+            <h1 className="font-display text-sm font-bold text-foreground tracking-wide uppercase pointer-events-none select-none">Spire Slayer</h1>
+            <div className="flex items-center gap-3 mt-2 pointer-events-none">
               {(Object.entries(pileCounts) as [PileLocation, number][]).map(([pile, count]) => {
                 const config = pileConfig[pile];
                 const Icon = config.icon;
@@ -439,6 +435,8 @@ export default function DeckTracker() {
             </div>
           </div>
 
+          <PlayerStatus />
+          <EnemyStatusList />
           <BuffsBar gameState={gameState} />
 
           <ScrollArea className="flex-1 w-full">
@@ -459,7 +457,7 @@ export default function DeckTracker() {
             {cardsExpanded ? (
               <div className="flex flex-col gap-1.5 p-2 pr-6">
                 {grouped.map((card) => (
-                  <MiniCard key={card.name} card={card} gameState={gameState} />
+                  <MiniCard key={card.name} card={card} gameState={gameState} playerClass={playerClass} />
                 ))}
               </div>
             ) : (
@@ -480,7 +478,6 @@ export default function DeckTracker() {
             </div>
           </ScrollArea>
         </>
-      )}
     </div>
   );
 }

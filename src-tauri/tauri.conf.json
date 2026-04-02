@@ -17,14 +17,16 @@
         "title": "Spire Slayer",
         "width": 700,
         "height": 900,
+        "x": 50,
+        "y": 50,
         "minWidth": 700,
         "maxWidth": 700,
         "transparent": true,
         "minHeight": 400,
-        "resizable": true,
+        "resizable": false,
         "fullscreen": false,
         "decorations": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": false
       }
     ],
     "security": {

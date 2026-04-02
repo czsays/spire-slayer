@@ -42,7 +42,7 @@ All colors MUST be HSL.
     --card-attack: 0 65% 50%;
     --card-skill: 210 65% 50%;
     --card-power: 280 50% 55%;
-    --card-status: 45 60% 50%;
+    --card-status: 0 0% 55%;
     --card-curse: 300 40% 35%;
 
     /* Pile colors */

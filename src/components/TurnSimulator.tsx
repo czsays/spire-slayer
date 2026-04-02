@@ -2,8 +2,21 @@ import { useMemo, useState } from "react";
 import { generateTurnPlans, type TurnPlan, type CardPlay } from "@/data/turnSimulator";
 import type { DeckCard } from "@/data/deckData";
 import type { GameState } from "@/data/gameState";
-import { Swords, Shield, Zap, Sparkles, Layers, ChevronDown, ChevronUp } from "lucide-react";
+import { Swords, Shield, Sparkles, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+function EnergyHexagon({ size = 9 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+      <polygon
+        points="12,2 22,7 22,17 12,22 2,17 2,7"
+        fill="hsl(330, 80%, 55%)"
+        stroke="hsl(330, 90%, 70%)"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
 
 function CardPlayRow({ play }: { play: CardPlay }) {
   const borderClass =

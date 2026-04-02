@@ -1,9 +1,9 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
-import TurnSimulator from "@/components/TurnSimulator";
 import EnergyIcon, { characterToClass } from "@/components/EnergyIcon";
 import ConnectionStatus from "@/components/ConnectionStatus";
 import PlayerStatus from "@/components/PlayerStatus";
 import EnemyStatusList from "@/components/EnemyStatusList";
+import RecommendationPanel from "@/components/RecommendationPanel";
 import { useGameStateContext } from "@/contexts/GameStateContext";
 import { isTauri } from "@/lib/tauri";
 import { createPortal } from "react-dom";
@@ -473,9 +473,7 @@ export default function DeckTracker() {
               </div>
             )}
 
-            <div className="border-t border-sidebar-border">
-              <TurnSimulator deck={deck} gameState={gameState} />
-            </div>
+            <RecommendationPanel />
           </ScrollArea>
         </>
     </div>

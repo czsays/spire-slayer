@@ -429,7 +429,7 @@ export default function DeckTracker() {
           <BuffsBar gameState={gameState} />
 
 
-          <ScrollArea className="flex-1">
+          <ScrollArea className="flex-1 w-full overflow-hidden">
             <div className="p-2 flex flex-col gap-1.5">
               {grouped.map((card) => (
                 <MiniCard key={card.name} card={card} gameState={gameState} />

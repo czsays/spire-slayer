@@ -68,9 +68,13 @@ function groupCards(deck: DeckCard[]): CardGroupEntry[] {
   }
 
   return Array.from(groups.values()).sort((a, b) => {
+    // Primary: draw odds descending
+    const oddsDiff = b.drawOdds - a.drawOdds;
+    if (oddsDiff !== 0) return oddsDiff;
+    // Secondary: type order
     const typeOrder: CardType[] = ["attack", "skill", "power", "status", "curse"];
-    const diff = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
-    if (diff !== 0) return diff;
+    const typeDiff = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+    if (typeDiff !== 0) return typeDiff;
     return a.name.localeCompare(b.name);
   });
 }

@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['"Cinzel"', 'serif'],
+        "card-title": ['"Lora"', 'serif'],
         body: ['"Inter"', 'sans-serif'],
       },
       colors: {

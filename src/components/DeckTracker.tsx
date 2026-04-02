@@ -5,7 +5,6 @@ import { sampleGameState, computeCardEffects, type GameState, type Relic } from 
 import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const pileConfig: Record<PileLocation, { label: string; icon: typeof Layers; colorClass: string }> = {
   draw: { label: "Draw Pile", icon: Layers, colorClass: "text-pile-draw" },

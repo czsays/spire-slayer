@@ -181,7 +181,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
   return (
     <div
       ref={cardRef}
-      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
+      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer overflow-hidden", typeColors[card.type])}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

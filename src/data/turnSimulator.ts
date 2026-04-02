@@ -21,7 +21,8 @@ export interface TurnPlan {
   totalBlock: number;
   allBuffs: string[];
   totalDraws: number;
-  label: string;       // short description like "All-out Attack"
+  label: string;
+  attackRatio: number;  // 0 = pure defense, 1 = pure attack
 }
 
 // ── Parse a single card into its play effects ────────────────────
@@ -169,6 +170,10 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
     const allBuffs = cards.flatMap((c) => c.buffs);
     const totalDraws = cards.reduce((s, c) => s + c.draws, 0);
 
+    const attackRatio = (totalDamage + totalBlock) > 0
+      ? totalDamage / (totalDamage + totalBlock)
+      : 0.5;
+
     const plan: TurnPlan = {
       id: `turn-${idx}`,
       cards,
@@ -178,13 +183,33 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
       allBuffs,
       totalDraws,
       label: "",
+      attackRatio,
     };
     plan.label = labelTurn(plan);
     return plan;
   });
 
-  // Sort by score descending, pick diverse top plans
+  // Sort by score descending
   plans.sort((a, b) => scoreTurn(b) - scoreTurn(a));
+
+  // Add adjective modifiers for duplicate labels
+  const labelCounts = new Map<string, number>();
+  for (const p of plans) {
+    labelCounts.set(p.label, (labelCounts.get(p.label) || 0) + 1);
+  }
+  const labelIndexes = new Map<string, number>();
+  for (const p of plans) {
+    if ((labelCounts.get(p.label) || 0) > 1) {
+      const idx2 = (labelIndexes.get(p.label) || 0);
+      labelIndexes.set(p.label, idx2 + 1);
+      if (p.label === "Balanced") {
+        p.label = p.attackRatio > 0.5 ? "Aggressive Balanced" : "Defensive Balanced";
+      } else {
+        const modifiers = ["Heavy", "Light", "Swift", "Steady"];
+        p.label = `${modifiers[idx2 % modifiers.length]} ${p.label}`;
+      }
+    }
+  }
 
   // Try to pick plans with different labels for variety
   const picked: TurnPlan[] = [];

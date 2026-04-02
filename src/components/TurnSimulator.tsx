@@ -64,16 +64,18 @@ function CardPlayRow({ play }: { play: CardPlay }) {
 }
 
 function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: TurnPlan; index: number; expanded: boolean; onToggle: () => void; maxEnergy: number }) {
-  const labelColors: Record<string, string> = {
-    "All-out Attack": "text-card-attack border-card-attack/30 bg-card-attack/5",
-    "Full Defense": "text-card-skill border-card-skill/30 bg-card-skill/5",
-    "Balanced": "text-accent border-accent/30 bg-accent/5",
-    "Setup": "text-card-power border-card-power/30 bg-card-power/5",
-    "Utility": "text-muted-foreground border-muted-foreground/30 bg-muted/10",
-  };
+  // Interpolate between attack red and defense blue based on attackRatio
+  const r = plan.attackRatio;
+  const hue = Math.round(0 * r + 220 * (1 - r)); // 0 = red, 220 = blue
+  const borderColor = `hsl(${hue}, 70%, 50%)`;
+  const bgColor = `hsl(${hue}, 70%, 50%, 0.08)`;
+  const textColor = `hsl(${hue}, 80%, 65%)`;
 
   return (
-    <div className={cn("rounded-lg border overflow-hidden transition-colors", labelColors[plan.label] || labelColors["Utility"])}>
+    <div
+      className="rounded-lg border overflow-hidden transition-colors"
+      style={{ borderColor, backgroundColor: bgColor, color: textColor }}
+    >
       <button
         onClick={onToggle}
         className="w-full flex items-center gap-2 px-2.5 py-2 hover:bg-white/5 transition-colors"

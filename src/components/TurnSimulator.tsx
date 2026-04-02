@@ -39,7 +39,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {play.damage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-card-attack font-medium">
-              <Swords size={9} /> {play.damage}
+              {play.damage} <Swords size={9} />
             </span>
           )}
           {play.block > 0 && (

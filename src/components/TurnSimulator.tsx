@@ -39,17 +39,17 @@ function CardPlayRow({ play }: { play: CardPlay }) {
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {play.damage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-card-attack font-medium">
-              <Swords size={9} /> {play.damage}
+              {play.damage} <Swords size={9} />
             </span>
           )}
           {play.block > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-card-skill font-medium">
-              <Shield size={9} /> {play.block}
+              {play.block} <Shield size={9} />
             </span>
           )}
           {play.draws > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-pile-draw font-medium">
-              <Layers size={9} /> +{play.draws}
+              +{play.draws} <Layers size={9} />
             </span>
           )}
           {play.buffs.map((b, i) => (
@@ -88,16 +88,16 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
         {/* Summary badges */}
         <div className="flex items-center gap-1.5">
           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium">
-            <EnergyHexagon size={9} /> {plan.totalEnergy}/{maxEnergy}
+            {plan.totalEnergy}/{maxEnergy} <EnergyHexagon size={9} />
           </span>
           {plan.totalDamage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">
-              <Swords size={9} /> {plan.totalDamage}
+              {plan.totalDamage} <Swords size={9} />
             </span>
           )}
           {plan.totalBlock > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-skill">
-              <Shield size={9} /> {plan.totalBlock}
+              {plan.totalBlock} <Shield size={9} />
             </span>
           )}
         </div>
@@ -117,16 +117,16 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
           <div className="flex items-center gap-3 pt-1.5 px-1 border-t border-current/10">
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Total:</span>
             <span className="inline-flex items-center gap-0.5 text-[10px] font-bold">
-              <EnergyHexagon size={9} /> {plan.totalEnergy}/{maxEnergy}E
+              {plan.totalEnergy}/{maxEnergy}E <EnergyHexagon size={9} />
             </span>
             {plan.totalDamage > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack">
-                <Swords size={9} /> {plan.totalDamage}
+                {plan.totalDamage} <Swords size={9} />
               </span>
             )}
             {plan.totalBlock > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-skill">
-                <Shield size={9} /> {plan.totalBlock}
+                {plan.totalBlock} <Shield size={9} />
               </span>
             )}
             {plan.totalDraws > 0 && (

@@ -201,10 +201,8 @@ export function useGameState(): UseGameStateResult {
   const lastVersion = useRef<number>(0);
 
   const handleUpdate = useCallback((state: AppGameState) => {
-    if (state.version !== lastVersion.current) {
-      lastVersion.current = state.version;
-      setAppState(state);
-    }
+    setAppState(state);
+    lastVersion.current = state.version;
   }, []);
 
   useEffect(() => {
@@ -226,7 +224,7 @@ export function useGameState(): UseGameStateResult {
     };
   }, [handleUpdate]);
 
-  // When running in browser (no Tauri), use sample data
+  // Fall back to sample data only when not in Tauri or no state received yet
   if (!appState || !isTauri()) {
     return {
       gameState: sampleGameState,

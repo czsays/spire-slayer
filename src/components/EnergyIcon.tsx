@@ -21,7 +21,20 @@ const shapes: Record<string, string> = {
   square: "3,3 21,3 21,21 3,21",
 };
 
-export default function EnergyIcon({ size = 9, playerClass = "necrobinder" }: EnergyIconProps) {
+/** Map the character name from the STS2MCP API to a PlayerClass */
+export function characterToClass(character: string): PlayerClass {
+  const lower = character.toLowerCase();
+  if (lower.includes("ironclad")) return "ironclad";
+  if (lower.includes("silent")) return "silent";
+  if (lower.includes("defect")) return "defect";
+  if (lower.includes("necro") || lower.includes("binder")) return "necrobinder";
+  if (lower.includes("regent")) return "regent";
+  // Fallback: try exact match
+  if (lower in classConfig) return lower as PlayerClass;
+  return "ironclad";
+}
+
+export default function EnergyIcon({ size = 9, playerClass = "ironclad" }: EnergyIconProps) {
   const config = classConfig[playerClass];
 
   return (

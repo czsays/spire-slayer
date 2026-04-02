@@ -22,7 +22,7 @@ pub struct Power {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Card {
     pub index: Option<i32>,
-    pub id: String,
+    pub id: Option<String>,
     pub name: String,
     #[serde(rename = "type")]
     pub card_type: Option<String>,
@@ -256,7 +256,7 @@ fn cost_to_string(cost: &Option<serde_json::Value>) -> String {
 
 fn convert_card(card: &Card, pile: &str) -> AppCard {
     AppCard {
-        id: card.id.clone(),
+        id: card.id.clone().unwrap_or_default(),
         name: card.name.clone(),
         card_type: card.card_type.clone().unwrap_or_default(),
         cost: cost_to_string(&card.cost),

@@ -10,13 +10,16 @@
     "beforeBuildCommand": "npm run build"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
         "label": "main",
         "title": "Spire Slayer",
-        "width": 380,
+        "width": 700,
         "height": 900,
-        "minWidth": 280,
+        "minWidth": 700,
+        "maxWidth": 700,
+        "transparent": true,
         "minHeight": 400,
         "resizable": true,
         "fullscreen": false,

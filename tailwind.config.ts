@@ -13,7 +13,20 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['"Cinzel"', 'serif'],
+        body: ['"Inter"', 'sans-serif'],
+      },
       colors: {
+        "card-attack": "hsl(var(--card-attack))",
+        "card-skill": "hsl(var(--card-skill))",
+        "card-power": "hsl(var(--card-power))",
+        "card-status": "hsl(var(--card-status))",
+        "card-curse": "hsl(var(--card-curse))",
+        "pile-draw": "hsl(var(--pile-draw))",
+        "pile-discard": "hsl(var(--pile-discard))",
+        "pile-exhaust": "hsl(var(--pile-exhaust))",
+        "pile-hand": "hsl(var(--pile-hand))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

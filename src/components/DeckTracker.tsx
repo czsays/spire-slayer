@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
 import { sampleGameState, computeCardEffects, type GameState } from "@/data/gameState";
 import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";

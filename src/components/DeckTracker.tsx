@@ -1,6 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
-import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand } from "lucide-react";
+import { sampleGameState, computeCardEffects, type GameState } from "@/data/gameState";
+import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -61,7 +63,6 @@ function groupCards(deck: DeckCard[]): CardGroupEntry[] {
     g.piles[card.pile]++;
   }
 
-  // Calculate draw odds
   for (const g of groups.values()) {
     g.drawOdds = drawPileSize > 0 ? g.piles.draw / drawPileSize : 0;
   }
@@ -74,12 +75,112 @@ function groupCards(deck: DeckCard[]): CardGroupEntry[] {
   });
 }
 
-function MiniCard({ card }: { card: CardGroupEntry }) {
+// ── Hover tooltip ────────────────────────────────────────────────
+
+function EffectTooltip({ card, gameState, anchorRef }: { card: CardGroupEntry; gameState: GameState; anchorRef: React.RefObject<HTMLDivElement> }) {
+  const result = useMemo(
+    () => computeCardEffects(card.name, card.description, card.type, gameState),
+    [card, gameState]
+  );
+
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      const tooltipHeight = 200; // estimate
+      let top = rect.top;
+      // Keep tooltip on screen
+      if (top + tooltipHeight > window.innerHeight) {
+        top = window.innerHeight - tooltipHeight - 8;
+      }
+      setPos({ top, left: rect.right + 8 });
+    }
+  }, [anchorRef]);
+
+  const effectIcon = (label: string) => {
+    if (label.toLowerCase().includes("damage")) return <Swords size={12} className="text-card-attack" />;
+    if (label.toLowerCase().includes("block")) return <Shield size={12} className="text-card-skill" />;
+    if (label.toLowerCase().includes("energy")) return <Zap size={12} className="text-accent" />;
+    return <Info size={12} className="text-muted-foreground" />;
+  };
+
+  if (!pos) return null;
+
+  return createPortal(
+    <div
+      style={{ top: pos.top, left: pos.left }}
+      className="fixed z-[9999] w-64 rounded-lg border border-border bg-card shadow-xl shadow-black/40 p-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-150"
+    >
+      <div className="font-display text-sm font-bold text-foreground mb-1">{card.name}</div>
+      <p className="text-[11px] text-muted-foreground mb-2 italic">{card.description}</p>
+
+      <div className="space-y-1.5">
+        {result.lines.map((line, i) => (
+          <div key={i} className="flex items-center gap-2">
+            {effectIcon(line.label)}
+            <span className="text-xs text-muted-foreground">{line.label}:</span>
+            {line.base !== null ? (
+              <span className="text-xs font-bold">
+                {line.changed ? (
+                  <>
+                    <span className="line-through text-muted-foreground/60 mr-1">{line.base}</span>
+                    <span className={line.modified! > line.base! ? "text-pile-hand" : "text-destructive"}>
+                      {line.modified}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-foreground">{line.base}</span>
+                )}
+                {line.suffix && <span className="text-muted-foreground font-normal">{line.suffix}</span>}
+              </span>
+            ) : (
+              <span className="text-xs text-foreground">{line.suffix}</span>
+            )}
+          </div>
+        ))}
+
+        {result.lines.some((l) => l.bonusBreakdown) && (
+          <div className="mt-2 pt-2 border-t border-border/50">
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 font-semibold">Modifiers</div>
+            {result.lines
+              .filter((l) => l.bonusBreakdown)
+              .map((l, i) => (
+                <div key={i} className="text-[11px] text-accent">{l.bonusBreakdown}</div>
+              ))}
+          </div>
+        )}
+      </div>
+
+      {result.notes.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-border/50 space-y-0.5">
+          {result.notes.map((note, i) => (
+            <div key={i} className="text-[10px] text-muted-foreground flex items-start gap-1">
+              <span className="text-accent mt-px">•</span>
+              <span>{note}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>,
+    document.body
+  );
+}
+// ── Mini card with hover ─────────────────────────────────────────
+
+function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameState }) {
+  const [hovered, setHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className={cn("rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125", typeColors[card.type])}>
+    <div
+      ref={cardRef}
+      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          {/* Cost gem */}
           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/30 border border-primary/50 flex items-center justify-center text-xs font-bold font-display text-primary-foreground">
             {card.cost}
           </span>
@@ -96,7 +197,6 @@ function MiniCard({ card }: { card: CardGroupEntry }) {
           </div>
         </div>
 
-        {/* Draw odds */}
         <div className="flex-shrink-0 text-right">
           <div className="text-xs font-bold font-display text-accent">
             {card.drawOdds > 0 ? `${(card.drawOdds * 100).toFixed(1)}%` : "—"}
@@ -104,7 +204,6 @@ function MiniCard({ card }: { card: CardGroupEntry }) {
         </div>
       </div>
 
-      {/* Pile breakdown */}
       <div className="flex items-center gap-3 mt-1.5">
         {(Object.entries(card.piles) as [PileLocation, number][]).map(([pile, count]) => {
           if (count === 0) return null;
@@ -119,13 +218,82 @@ function MiniCard({ card }: { card: CardGroupEntry }) {
         })}
         <span className="text-[11px] text-muted-foreground ml-auto">×{card.totalCount}</span>
       </div>
+
+      {hovered && <EffectTooltip card={card} gameState={gameState} anchorRef={cardRef} />}
     </div>
   );
 }
 
+// ── Buffs bar ────────────────────────────────────────────────────
+
+function BuffsBar({ gameState }: { gameState: GameState }) {
+  const buffs = [
+    { label: "STR", value: gameState.player.strength, color: "text-card-attack" },
+    { label: "DEX", value: gameState.player.dexterity, color: "text-card-skill" },
+  ].filter((b) => b.value !== 0);
+
+  const debuffs = [
+    { label: "Weak", value: gameState.player.weak },
+    { label: "Frail", value: gameState.player.frail },
+  ].filter((d) => d.value > 0);
+
+  const enemyDebuffs = [
+    { label: "Vuln", value: gameState.enemy.vulnerable },
+    { label: "Weak", value: gameState.enemy.weak },
+  ].filter((d) => d.value > 0);
+
+  return (
+    <div className="px-3 py-1.5 border-b border-sidebar-border space-y-1">
+      {buffs.length > 0 && (
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Buffs:</span>
+          {buffs.map((b) => (
+            <span key={b.label} className={cn("text-[11px] font-bold", b.color)}>
+              {b.label} {b.value > 0 ? "+" : ""}{b.value}
+            </span>
+          ))}
+        </div>
+      )}
+      {debuffs.length > 0 && (
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Debuffs:</span>
+          {debuffs.map((d) => (
+            <span key={d.label} className="text-[11px] font-bold text-destructive">
+              {d.label} ×{d.value}
+            </span>
+          ))}
+        </div>
+      )}
+      {enemyDebuffs.length > 0 && (
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Enemy:</span>
+          {enemyDebuffs.map((d) => (
+            <span key={d.label} className="text-[11px] font-bold text-accent">
+              {d.label} ×{d.value}
+            </span>
+          ))}
+        </div>
+      )}
+      {gameState.relics.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>
+          {gameState.relics.map((r) => (
+            <span key={r.id} className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded">
+              {r.name}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main component ───────────────────────────────────────────────
+
 export default function DeckTracker() {
   const [collapsed, setCollapsed] = useState(false);
   const deck = sampleDeck;
+  const gameState = sampleGameState;
   const grouped = useMemo(() => groupCards(deck), [deck]);
 
   const pileCounts = useMemo(() => {
@@ -141,7 +309,6 @@ export default function DeckTracker() {
         collapsed ? "w-10" : "w-80"
       )}
     >
-      {/* Toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="absolute -right-3 top-4 z-10 w-6 h-6 rounded-full bg-secondary border border-border flex items-center justify-center hover:bg-accent transition-colors"
@@ -160,7 +327,6 @@ export default function DeckTracker() {
         </div>
       ) : (
         <>
-          {/* Header */}
           <div className="p-3 border-b border-sidebar-border">
             <h1 className="font-display text-sm font-bold text-foreground tracking-wide uppercase">Deck Tracker</h1>
             <div className="flex items-center gap-3 mt-2">
@@ -178,7 +344,8 @@ export default function DeckTracker() {
             </div>
           </div>
 
-          {/* Legend */}
+          <BuffsBar gameState={gameState} />
+
           <div className="px-3 py-1.5 border-b border-sidebar-border flex items-center gap-3 text-[10px] text-muted-foreground">
             <span className="text-pile-draw flex items-center gap-0.5"><Layers size={9} /> Draw</span>
             <span className="text-pile-hand flex items-center gap-0.5"><Hand size={9} /> Hand</span>
@@ -187,11 +354,10 @@ export default function DeckTracker() {
             <span className="ml-auto text-accent font-bold">% = Draw Odds</span>
           </div>
 
-          {/* Card list */}
           <ScrollArea className="flex-1">
             <div className="p-2 flex flex-col gap-1.5">
               {grouped.map((card) => (
-                <MiniCard key={card.name} card={card} />
+                <MiniCard key={card.name} card={card} gameState={gameState} />
               ))}
             </div>
           </ScrollArea>

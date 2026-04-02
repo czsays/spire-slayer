@@ -147,14 +147,14 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
   }
 
   return (
-    <div className="p-2 space-y-1.5">
+    <div className="p-2 pr-3 space-y-1.5">
       <div className="flex items-center gap-2 px-1 pb-1">
         <Sparkles size={12} className="text-accent" />
         <span className="text-[10px] font-display font-bold text-muted-foreground uppercase tracking-wider">
           Turn Options
         </span>
-        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto">
-          {gameState.energy} <EnergyIcon size={10} /> available
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto flex-shrink-0">
+          {gameState.energy} <EnergyIcon size={10} />
         </span>
       </div>
       {plans.map((plan, i) => (

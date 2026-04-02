@@ -388,7 +388,7 @@ export default function DeckTracker() {
     <div
       className={cn(
         "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative overflow-hidden",
-        collapsed ? "w-10" : "w-[280px]"
+        collapsed ? "w-10" : "w-[360px]"
       )}
     >
       <button
@@ -429,8 +429,8 @@ export default function DeckTracker() {
           <BuffsBar gameState={gameState} />
 
 
-          <ScrollArea className="flex-1">
-            <div className="p-2 flex flex-col gap-1.5">
+          <ScrollArea className="flex-1 w-full overflow-hidden">
+            <div className="p-2 pr-3 flex flex-col gap-1.5">
               {grouped.map((card) => (
                 <MiniCard key={card.name} card={card} gameState={gameState} />
               ))}

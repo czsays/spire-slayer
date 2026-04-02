@@ -185,7 +185,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="relative flex-shrink-0 w-6 h-6 flex items-center justify-center">
             <span className="absolute"><EnergyIcon size={22} /></span>

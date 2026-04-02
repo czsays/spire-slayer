@@ -167,6 +167,7 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
           index={i}
           expanded={expandedIdx === i}
           onToggle={() => setExpandedIdx(expandedIdx === i ? null : i)}
+          maxEnergy={gameState.energy}
         />
       ))}
     </div>

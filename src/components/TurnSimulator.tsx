@@ -49,7 +49,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
           )}
           {play.draws > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-pile-draw font-medium">
-              <Layers size={9} /> +{play.draws}
+              +{play.draws} <Layers size={9} />
             </span>
           )}
           {play.buffs.map((b, i) => (

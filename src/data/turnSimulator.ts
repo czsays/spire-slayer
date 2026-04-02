@@ -21,7 +21,8 @@ export interface TurnPlan {
   totalBlock: number;
   allBuffs: string[];
   totalDraws: number;
-  label: string;       // short description like "All-out Attack"
+  label: string;
+  attackRatio: number;  // 0 = pure defense, 1 = pure attack
 }
 
 // ── Parse a single card into its play effects ────────────────────

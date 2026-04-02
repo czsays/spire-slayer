@@ -66,10 +66,28 @@ export const sampleGameState: GameState = {
     platedArmor: 0,
     metallicize: 0,
   },
-  enemy: {
-    vulnerable: 0,
-    weak: 0,
-  },
+  enemies: [
+    {
+      id: "enemy-1",
+      name: "Lagavulin",
+      hp: 30,
+      maxHp: 72,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
+      strength: 0,
+    },
+    {
+      id: "enemy-2",
+      name: "Jaw Worm",
+      hp: 28,
+      maxHp: 44,
+      block: 4,
+      vulnerable: 2,
+      weak: 1,
+      strength: 0,
+    },
+  ],
   relics: [
     {
       id: "vajra",

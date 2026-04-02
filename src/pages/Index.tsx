@@ -1,7 +1,5 @@
 import DeckTracker from "@/components/DeckTracker";
-import EnemyOverlay from "@/components/EnemyOverlay";
-import { sampleGameState } from "@/data/gameState";
-import gameScreenshot from "@/assets/game-screenshot.png";
+import gameScreenshot from "@/assets/game-screenshot.jpg";
 
 const Index = () => {
   return (
@@ -13,7 +11,6 @@ const Index = () => {
           alt="Slay the Spire 2 gameplay"
           className="w-full h-full object-cover"
         />
-        <EnemyOverlay enemies={sampleGameState.enemies} />
       </div>
     </div>
   );

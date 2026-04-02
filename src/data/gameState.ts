@@ -55,7 +55,7 @@ export interface GameState {
 // ── Sample state matching the screenshot ─────────────────────────
 export const sampleGameState: GameState = {
   player: {
-    strength: 3,
+    strength: 0,
     dexterity: 0,
     focus: 0,
     vulnerable: 0,
@@ -69,9 +69,9 @@ export const sampleGameState: GameState = {
   enemies: [
     {
       id: "enemy-1",
-      name: "Lagavulin",
-      hp: 30,
-      maxHp: 72,
+      name: "Acid Slime",
+      hp: 10,
+      maxHp: 10,
       block: 0,
       vulnerable: 0,
       weak: 0,
@@ -79,27 +79,31 @@ export const sampleGameState: GameState = {
     },
     {
       id: "enemy-2",
-      name: "Jaw Worm",
-      hp: 28,
-      maxHp: 44,
-      block: 4,
-      vulnerable: 2,
-      weak: 1,
+      name: "Spike Slime",
+      hp: 35,
+      maxHp: 35,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
+      strength: 0,
+    },
+    {
+      id: "enemy-3",
+      name: "Acid Slime (S)",
+      hp: 15,
+      maxHp: 15,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
       strength: 0,
     },
   ],
   relics: [
     {
-      id: "vajra",
-      name: "Vajra",
-      description: "At the start of each combat, gain 1 Strength.",
-      effect: { type: "custom", description: "Start-of-combat buff (already applied)" },
-    },
-    {
-      id: "pen-nib",
-      name: "Pen Nib",
-      description: "Every 10th Attack deals double damage.",
-      effect: { type: "custom", description: "Conditional 2× on 10th attack" },
+      id: "burning-blood",
+      name: "Burning Blood",
+      description: "At the end of combat, heal 6 HP.",
+      effect: { type: "custom", description: "Post-combat heal" },
     },
     {
       id: "bag-of-marbles",

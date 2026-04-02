@@ -393,8 +393,8 @@ export default function DeckTracker() {
   return (
     <div
       className={cn(
-        "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative",
-        collapsed ? "w-10" : "w-[360px]"
+        "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative overflow-hidden",
+        collapsed ? "w-10" : "w-[280px]"
       )}
     >
       <button

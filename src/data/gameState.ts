@@ -100,16 +100,10 @@ export const sampleGameState: GameState = {
   ],
   relics: [
     {
-      id: "vajra",
-      name: "Vajra",
-      description: "At the start of each combat, gain 1 Strength.",
-      effect: { type: "custom", description: "Start-of-combat buff (already applied)" },
-    },
-    {
-      id: "pen-nib",
-      name: "Pen Nib",
-      description: "Every 10th Attack deals double damage.",
-      effect: { type: "custom", description: "Conditional 2× on 10th attack" },
+      id: "burning-blood",
+      name: "Burning Blood",
+      description: "At the end of combat, heal 6 HP.",
+      effect: { type: "custom", description: "Post-combat heal" },
     },
     {
       id: "bag-of-marbles",

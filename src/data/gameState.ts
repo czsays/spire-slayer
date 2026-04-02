@@ -316,7 +316,6 @@ export function computeCardEffects(
       notes.push(`${e.name} Vulnerable (${e.vulnerable} turns) → +50% damage`);
     });
   }
-  }
   if (state.player.weak > 0 && dmgMatch) {
     notes.push(`Player Weak (${state.player.weak} turns) → −25% damage`);
   }

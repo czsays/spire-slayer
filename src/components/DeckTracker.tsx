@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import TurnSimulator from "@/components/TurnSimulator";
+import EnergyIcon from "@/components/EnergyIcon";
 import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
 import { sampleGameState, computeCardEffects, type GameState, type Relic } from "@/data/gameState";

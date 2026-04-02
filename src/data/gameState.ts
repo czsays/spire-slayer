@@ -46,7 +46,7 @@ export type RelicEffect =
 // ── Full game snapshot ───────────────────────────────────────────
 export interface GameState {
   player: BuffState;
-  enemy: EnemyState;
+  enemies: EnemyState[];
   relics: Relic[];
   energy: number;
   maxEnergy: number;

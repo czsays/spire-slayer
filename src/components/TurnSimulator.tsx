@@ -147,7 +147,7 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
   }
 
   return (
-    <div className="p-2 space-y-1.5">
+    <div className="p-2 pr-3 space-y-1.5">
       <div className="flex items-center gap-2 px-1 pb-1">
         <Sparkles size={12} className="text-accent" />
         <span className="text-[10px] font-display font-bold text-muted-foreground uppercase tracking-wider">

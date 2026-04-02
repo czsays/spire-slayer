@@ -186,7 +186,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
           </span>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-display text-sm font-semibold text-foreground truncate">
+              <span className="font-card-title text-sm font-semibold text-foreground truncate">
                 {card.name}
               </span>
               <span className={cn("text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider font-bold", typeBadgeColors[card.type])}>

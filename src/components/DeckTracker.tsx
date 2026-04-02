@@ -77,11 +77,26 @@ function groupCards(deck: DeckCard[]): CardGroupEntry[] {
 
 // ── Hover tooltip ────────────────────────────────────────────────
 
-function EffectTooltip({ card, gameState }: { card: CardGroupEntry; gameState: GameState }) {
+function EffectTooltip({ card, gameState, anchorRef }: { card: CardGroupEntry; gameState: GameState; anchorRef: React.RefObject<HTMLDivElement> }) {
   const result = useMemo(
     () => computeCardEffects(card.name, card.description, card.type, gameState),
     [card, gameState]
   );
+
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      const tooltipHeight = 200; // estimate
+      let top = rect.top;
+      // Keep tooltip on screen
+      if (top + tooltipHeight > window.innerHeight) {
+        top = window.innerHeight - tooltipHeight - 8;
+      }
+      setPos({ top, left: rect.right + 8 });
+    }
+  }, [anchorRef]);
 
   const effectIcon = (label: string) => {
     if (label.toLowerCase().includes("damage")) return <Swords size={12} className="text-card-attack" />;
@@ -90,13 +105,16 @@ function EffectTooltip({ card, gameState }: { card: CardGroupEntry; gameState: G
     return <Info size={12} className="text-muted-foreground" />;
   };
 
-  return (
-    <div className="absolute left-full top-0 ml-2 z-50 w-64 rounded-lg border border-border bg-card shadow-xl shadow-black/40 p-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-150">
-      {/* Card name */}
+  if (!pos) return null;
+
+  return createPortal(
+    <div
+      style={{ top: pos.top, left: pos.left }}
+      className="fixed z-[9999] w-64 rounded-lg border border-border bg-card shadow-xl shadow-black/40 p-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-150"
+    >
       <div className="font-display text-sm font-bold text-foreground mb-1">{card.name}</div>
       <p className="text-[11px] text-muted-foreground mb-2 italic">{card.description}</p>
 
-      {/* Computed effects */}
       <div className="space-y-1.5">
         {result.lines.map((line, i) => (
           <div key={i} className="flex items-center gap-2">
@@ -122,7 +140,6 @@ function EffectTooltip({ card, gameState }: { card: CardGroupEntry; gameState: G
           </div>
         ))}
 
-        {/* Breakdown */}
         {result.lines.some((l) => l.bonusBreakdown) && (
           <div className="mt-2 pt-2 border-t border-border/50">
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 font-semibold">Modifiers</div>
@@ -135,7 +152,6 @@ function EffectTooltip({ card, gameState }: { card: CardGroupEntry; gameState: G
         )}
       </div>
 
-      {/* Game context notes */}
       {result.notes.length > 0 && (
         <div className="mt-2 pt-2 border-t border-border/50 space-y-0.5">
           {result.notes.map((note, i) => (
@@ -146,10 +162,10 @@ function EffectTooltip({ card, gameState }: { card: CardGroupEntry; gameState: G
           ))}
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
-
 // ── Mini card with hover ─────────────────────────────────────────
 
 function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameState }) {

@@ -244,7 +244,7 @@ function RelicPill({ relic }: { relic: Relic }) {
     <>
       <span
         ref={ref}
-        className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-muted-foreground/20 transition-colors"
+        className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-muted-foreground/20 hover:ring-1 hover:ring-muted-foreground/40 transition-all"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >

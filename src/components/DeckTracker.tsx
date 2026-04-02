@@ -384,13 +384,13 @@ export default function DeckTracker() {
   return (
     <div
       className={cn(
-        "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative overflow-hidden",
-        collapsed ? "w-10" : "w-[340px]"
+        "h-screen flex-shrink-0 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col relative",
+        collapsed ? "w-10" : "w-[360px]"
       )}
     >
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-4 z-10 w-6 h-6 rounded-full bg-secondary border border-border flex items-center justify-center hover:bg-accent transition-colors"
+        className="absolute right-1 top-4 z-10 w-6 h-6 rounded-full bg-secondary border border-border flex items-center justify-center hover:bg-accent transition-colors"
       >
         {collapsed ? <ChevronRight size={14} className="text-foreground" /> : <ChevronLeft size={14} className="text-foreground" />}
       </button>

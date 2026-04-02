@@ -433,6 +433,10 @@ export default function DeckTracker() {
                 <MiniCard key={card.name} card={card} gameState={gameState} />
               ))}
             </div>
+
+            <div className="border-t border-sidebar-border">
+              <TurnSimulator deck={deck} gameState={gameState} />
+            </div>
           </ScrollArea>
         </>
       )}

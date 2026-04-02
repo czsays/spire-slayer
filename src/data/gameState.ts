@@ -100,16 +100,10 @@ export const sampleGameState: GameState = {
   ],
   relics: [
     {
-      id: "burning-blood",
-      name: "Burning Blood",
-      description: "At the end of combat, heal 6 HP.",
-      effect: { type: "custom", description: "Post-combat heal" },
-    },
-    {
-      id: "bag-of-marbles",
-      name: "Bag of Marbles",
-      description: "At the start of each combat, apply 1 Vulnerable to ALL enemies.",
-      effect: { type: "custom", description: "Start-of-combat debuff (may be active)" },
+      id: "bound-phylactery",
+      name: "Bound Phylactery",
+      description: "At the start of your turn, Summon 1.",
+      effect: { type: "custom", description: "Start-of-turn Summon 1" },
     },
   ],
   energy: 2,

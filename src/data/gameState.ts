@@ -15,8 +15,14 @@ export interface BuffState {
 }
 
 export interface EnemyState {
+  id: string;
+  name: string;
+  hp: number;
+  maxHp: number;
+  block: number;
   vulnerable: number;
   weak: number;
+  strength: number;
 }
 
 // ── Relics ───────────────────────────────────────────────────────
@@ -40,7 +46,7 @@ export type RelicEffect =
 // ── Full game snapshot ───────────────────────────────────────────
 export interface GameState {
   player: BuffState;
-  enemy: EnemyState;
+  enemies: EnemyState[];
   relics: Relic[];
   energy: number;
   maxEnergy: number;
@@ -60,10 +66,28 @@ export const sampleGameState: GameState = {
     platedArmor: 0,
     metallicize: 0,
   },
-  enemy: {
-    vulnerable: 0,
-    weak: 0,
-  },
+  enemies: [
+    {
+      id: "enemy-1",
+      name: "Lagavulin",
+      hp: 30,
+      maxHp: 72,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
+      strength: 0,
+    },
+    {
+      id: "enemy-2",
+      name: "Jaw Worm",
+      hp: 28,
+      maxHp: 44,
+      block: 4,
+      vulnerable: 2,
+      weak: 1,
+      strength: 0,
+    },
+  ],
   relics: [
     {
       id: "vajra",
@@ -122,7 +146,8 @@ function calcDamage(base: number, state: GameState): { value: number; breakdown:
     breakdown.push(`×${WEAK_MULT} (Weak)`);
   }
 
-  if (state.enemy.vulnerable > 0) {
+  const anyVulnerable = state.enemies.some((e) => e.vulnerable > 0);
+  if (anyVulnerable) {
     dmg = Math.floor(dmg * VULNERABLE_MULT);
     breakdown.push(`×${VULNERABLE_MULT} (Vulnerable)`);
   }
@@ -133,7 +158,7 @@ function calcDamage(base: number, state: GameState): { value: number; breakdown:
       dmg += r.effect.value;
       breakdown.push(`+${r.effect.value} (${r.name})`);
     }
-    if (r.effect.type === "vulnerableMultiplier" && state.enemy.vulnerable > 0) {
+    if (r.effect.type === "vulnerableMultiplier" && anyVulnerable) {
       // Replace default vulnerable calc — already applied above, but note it
       breakdown.push(`Vuln ×${r.effect.value} (${r.name})`);
     }
@@ -285,8 +310,11 @@ export function computeCardEffects(
   if (state.player.dexterity !== 0 && blockMatch) {
     notes.push(`Dexterity ${state.player.dexterity > 0 ? "+" : ""}${state.player.dexterity} applied to block`);
   }
-  if (state.enemy.vulnerable > 0 && dmgMatch) {
-    notes.push(`Enemy Vulnerable (${state.enemy.vulnerable} turns) → +50% damage`);
+  const vulnEnemies = state.enemies.filter((e) => e.vulnerable > 0);
+  if (vulnEnemies.length > 0 && dmgMatch) {
+    vulnEnemies.forEach((e) => {
+      notes.push(`${e.name} Vulnerable (${e.vulnerable} turns) → +50% damage`);
+    });
   }
   if (state.player.weak > 0 && dmgMatch) {
     notes.push(`Player Weak (${state.player.weak} turns) → −25% damage`);

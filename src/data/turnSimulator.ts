@@ -161,7 +161,7 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
   });
 
   // Build turn plans
-  const plans: TurnPlan[] = uniqueCombos.map((combo, idx) => {
+  const plans: TurnPlan[] = maximalCombos.map((combo, idx) => {
     const cards = combo.map((c) => simulateCardPlay(c, state));
     const totalEnergy = cards.reduce((s, c) => s + c.cost, 0);
     const totalDamage = cards.reduce((s, c) => s + c.damage, 0);

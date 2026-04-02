@@ -11,24 +11,22 @@ export interface DeckCard {
   pile: PileLocation;
 }
 
-// Silent-style deck matching the new screenshot (Turn 1)
+// Necrobinder starting deck + a few early pickups
 export const sampleDeck: DeckCard[] = [
-  // Hand (visible in screenshot: Defend, Defend, Strike, Defend, Strike)
-  { id: "1", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "hand" },
+  // Hand (5 cards drawn)
+  { id: "1", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "hand" },
   { id: "2", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "hand" },
-  { id: "3", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "hand" },
-  { id: "4", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "hand" },
-  { id: "5", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "hand" },
+  { id: "3", name: "Bodyguard", cost: 1, type: "skill", description: "Summon 5.", upgraded: false, pile: "hand" },
+  { id: "4", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "hand" },
+  { id: "5", name: "Blight Strike", cost: 1, type: "attack", description: "Deal 8 damage. Apply Doom equal to damage dealt.", upgraded: false, pile: "hand" },
 
-  // Draw pile
+  // Draw pile (remaining starter cards + early pickups)
   { id: "6", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "draw" },
   { id: "7", name: "Strike", cost: 1, type: "attack", description: "Deal 6 damage.", upgraded: false, pile: "draw" },
   { id: "8", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
-  { id: "9", name: "Neutralize", cost: 0, type: "attack", description: "Deal 3 damage. Apply 1 Weak.", upgraded: false, pile: "draw" },
-  { id: "10", name: "Survivor", cost: 1, type: "skill", description: "Gain 8 Block. Discard 1 card.", upgraded: false, pile: "draw" },
-  { id: "11", name: "Backstab", cost: 0, type: "attack", description: "Innate. Deal 11 damage. Exhaust.", upgraded: false, pile: "draw" },
-  { id: "12", name: "Deadly Poison", cost: 1, type: "skill", description: "Apply 5 Poison.", upgraded: false, pile: "draw" },
-  { id: "13", name: "Blade Dance", cost: 1, type: "skill", description: "Add 3 Shivs to your hand.", upgraded: false, pile: "draw" },
-  { id: "14", name: "Acrobatics", cost: 1, type: "skill", description: "Draw 3 cards. Discard 1 card.", upgraded: false, pile: "draw" },
-  { id: "15", name: "Dash", cost: 2, type: "attack", description: "Deal 10 damage. Gain 10 Block.", upgraded: false, pile: "draw" },
+  { id: "9", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
+  { id: "10", name: "Defend", cost: 1, type: "skill", description: "Gain 5 Block.", upgraded: false, pile: "draw" },
+  { id: "11", name: "Unleash", cost: 1, type: "attack", description: "Deal damage equal to Osty's Summon.", upgraded: false, pile: "draw" },
+  { id: "12", name: "Afterlife", cost: 1, type: "skill", description: "Summon 6. Exhaust.", upgraded: false, pile: "draw" },
+  { id: "13", name: "Defile", cost: 1, type: "attack", description: "Deal 7 damage. Apply 3 Doom.", upgraded: false, pile: "draw" },
 ];

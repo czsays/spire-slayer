@@ -272,59 +272,89 @@ function RelicPill({ relic }: { relic: Relic }) {
 
 function BuffsBar({ gameState }: { gameState: GameState }) {
   const buffs = [
-    { label: "STR", value: gameState.player.strength, color: "text-card-attack" },
-    { label: "DEX", value: gameState.player.dexterity, color: "text-card-skill" },
+    { label: "STR", value: gameState.player.strength, color: "#e63946", bg: "rgba(230,57,70,0.15)" },
+    { label: "DEX", value: gameState.player.dexterity, color: "#4895ef", bg: "rgba(72,149,239,0.15)" },
   ].filter((b) => b.value !== 0);
 
   const debuffs = [
-    { label: "Weak", value: gameState.player.weak },
-    { label: "Frail", value: gameState.player.frail },
+    { label: "Weak", value: gameState.player.weak, icon: "weak" as const },
+    { label: "Frail", value: gameState.player.frail, icon: "frail" as const },
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="px-3 py-1.5 border-b border-sidebar-border space-y-1">
+    <div className="px-3 py-2 border-b border-sidebar-border space-y-2">
+      {/* Player buffs */}
       {buffs.length > 0 && (
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Buffs:</span>
           {buffs.map((b) => (
-            <span key={b.label} className={cn("text-[11px] font-bold", b.color)}>
+            <span
+              key={b.label}
+              className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border"
+              style={{ color: b.color, borderColor: b.color, background: b.bg }}
+            >
               {b.label} {b.value > 0 ? "+" : ""}{b.value}
             </span>
           ))}
         </div>
       )}
+
+      {/* Player debuffs */}
       {debuffs.length > 0 && (
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Debuffs:</span>
           {debuffs.map((d) => (
-            <span key={d.label} className="text-[11px] font-bold text-destructive">
+            <span
+              key={d.label}
+              className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border"
+              style={{
+                color: d.icon === "weak" ? "#57cc99" : "#f4a261",
+                borderColor: d.icon === "weak" ? "#57cc99" : "#f4a261",
+                background: d.icon === "weak" ? "rgba(87,204,153,0.15)" : "rgba(244,162,97,0.15)",
+              }}
+            >
               {d.label} ×{d.value}
             </span>
           ))}
         </div>
       )}
+
+      {/* Enemy statuses */}
       {gameState.enemies.map((enemy) => {
-        const eDebuffs = [
-          enemy.vulnerable > 0 && { label: "Vuln", value: enemy.vulnerable },
-          enemy.weak > 0 && { label: "Weak", value: enemy.weak },
-        ].filter(Boolean) as { label: string; value: number }[];
-        if (eDebuffs.length === 0) return null;
+        const hasStatus = enemy.vulnerable > 0 || enemy.weak > 0 || enemy.block > 0;
+        if (!hasStatus) return null;
         return (
-          <div key={enemy.id} className="flex items-center gap-2">
+          <div key={enemy.id} className="flex items-center gap-1.5 flex-wrap">
             <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{enemy.name}:</span>
-            {eDebuffs.map((d) => (
-              <span key={d.label} className="text-[11px] font-bold text-accent">
-                {d.label} ×{d.value}
-              </span>
-            ))}
             {enemy.block > 0 && (
-              <span className="text-[11px] font-bold text-card-skill">
+              <span
+                className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border"
+                style={{ color: "#4895ef", borderColor: "#4895ef", background: "rgba(72,149,239,0.15)" }}
+              >
                 🛡 {enemy.block}
+              </span>
+            )}
+            {enemy.vulnerable > 0 && (
+              <span
+                className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border"
+                style={{ color: "#e63946", borderColor: "#e63946", background: "rgba(230,57,70,0.15)" }}
+              >
+                💔 Vuln ×{enemy.vulnerable}
+              </span>
+            )}
+            {enemy.weak > 0 && (
+              <span
+                className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border"
+                style={{ color: "#57cc99", borderColor: "#57cc99", background: "rgba(87,204,153,0.15)" }}
+              >
+                💧 Weak ×{enemy.weak}
               </span>
             )}
           </div>
         );
       })}
+
+      {/* Relics */}
       {gameState.relics.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>

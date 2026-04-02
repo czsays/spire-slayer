@@ -439,7 +439,7 @@ export default function DeckTracker() {
 
           <BuffsBar gameState={gameState} />
 
-          <ScrollArea className="flex-1 w-full overflow-hidden">
+          <ScrollArea className="flex-1 w-full">
             {/* Collapsible card list header */}
             <button
               onClick={() => setCardsExpanded(!cardsExpanded)}

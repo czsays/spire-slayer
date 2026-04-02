@@ -279,9 +279,17 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>
           {gameState.relics.map((r) => (
-            <span key={r.id} className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded">
-              {r.name}
-            </span>
+            <Tooltip key={r.id}>
+              <TooltipTrigger asChild>
+                <span className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-accent transition-colors">
+                  {r.name}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-[200px] bg-card border-border text-foreground">
+                <p className="font-display text-xs font-semibold">{r.name}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{r.description}</p>
+              </TooltipContent>
+            </Tooltip>
           ))}
         </div>
       )}

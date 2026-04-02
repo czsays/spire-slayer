@@ -4,19 +4,7 @@ import type { DeckCard } from "@/data/deckData";
 import type { GameState } from "@/data/gameState";
 import { Swords, Shield, Sparkles, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-function EnergyHexagon({ size = 9 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-      <polygon
-        points="12,2 22,7 22,17 12,22 2,17 2,7"
-        fill="hsl(330, 80%, 55%)"
-        stroke="hsl(330, 90%, 70%)"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
+import EnergyIcon from "@/components/EnergyIcon";
 
 function CardPlayRow({ play }: { play: CardPlay }) {
   return (
@@ -24,7 +12,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="relative w-4 h-4 flex items-center justify-center flex-shrink-0">
-            <EnergyHexagon size={14} />
+            <EnergyIcon size={14} />
             <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-white">{play.cost}</span>
           </span>
           <span className="text-[11px] font-semibold text-foreground truncate">{play.cardName}</span>
@@ -83,7 +71,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
         {/* Summary badges */}
         <div className="flex items-center gap-1.5">
           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium">
-            {plan.totalEnergy}/{maxEnergy} <EnergyHexagon size={9} />
+            {plan.totalEnergy}/{maxEnergy} <EnergyIcon size={9} />
           </span>
           {plan.totalDamage > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-card-attack">
@@ -112,7 +100,7 @@ function TurnPlanCard({ plan, index, expanded, onToggle, maxEnergy }: { plan: Tu
           <div className="flex items-center gap-3 pt-1.5 px-1 border-t border-current/10">
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Total:</span>
             <span className="inline-flex items-center gap-0.5 text-[10px] font-bold">
-              {plan.totalEnergy}/{maxEnergy}E <EnergyHexagon size={9} />
+              {plan.totalEnergy}/{maxEnergy}E <EnergyIcon size={9} />
             </span>
             {plan.totalDamage > 0 && (
               <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-card-attack">
@@ -166,7 +154,7 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
           Turn Options
         </span>
         <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto">
-          {gameState.energy} <EnergyHexagon size={10} /> available
+          {gameState.energy} <EnergyIcon size={10} /> available
         </span>
       </div>
       {plans.map((plan, i) => (

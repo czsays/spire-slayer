@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import TurnSimulator from "@/components/TurnSimulator";
+import EnergyIcon from "@/components/EnergyIcon";
 import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
 import { sampleGameState, computeCardEffects, type GameState, type Relic } from "@/data/gameState";
@@ -187,14 +188,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <span className="relative flex-shrink-0 w-6 h-6 flex items-center justify-center">
-            <svg width={22} height={22} viewBox="0 0 24 24" fill="none" className="absolute">
-              <polygon
-                points="12,2 22,7 22,17 12,22 2,17 2,7"
-                fill="hsl(330, 80%, 55%)"
-                stroke="hsl(330, 90%, 70%)"
-                strokeWidth="1.5"
-              />
-            </svg>
+            <span className="absolute"><EnergyIcon size={22} /></span>
             <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
           </span>
           <div className="min-w-0">

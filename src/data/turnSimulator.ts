@@ -145,7 +145,7 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
   const seen = new Set<string>();
   const uniqueCombos: DeckCard[][] = [];
   for (const combo of combos) {
-    const key = combo.map((c) => c.id).sort().join(",");
+    const key = combo.map((c) => c.name).sort().join(",");
     if (!seen.has(key)) {
       seen.add(key);
       uniqueCombos.push(combo);

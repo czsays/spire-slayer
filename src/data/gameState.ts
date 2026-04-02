@@ -146,7 +146,8 @@ function calcDamage(base: number, state: GameState): { value: number; breakdown:
     breakdown.push(`×${WEAK_MULT} (Weak)`);
   }
 
-  if (state.enemy.vulnerable > 0) {
+  const anyVulnerable = state.enemies.some((e) => e.vulnerable > 0);
+  if (anyVulnerable) {
     dmg = Math.floor(dmg * VULNERABLE_MULT);
     breakdown.push(`×${VULNERABLE_MULT} (Vulnerable)`);
   }

@@ -44,7 +44,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
           )}
           {play.block > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[10px] text-card-skill font-medium">
-              <Shield size={9} /> {play.block}
+              {play.block} <Shield size={9} />
             </span>
           )}
           {play.draws > 0 && (

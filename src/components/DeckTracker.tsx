@@ -4,7 +4,7 @@ import EnergyIcon from "@/components/EnergyIcon";
 import { createPortal } from "react-dom";
 import { sampleDeck, type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
 import { sampleGameState, computeCardEffects, type GameState, type Relic } from "@/data/gameState";
-import { ChevronLeft, ChevronRight, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

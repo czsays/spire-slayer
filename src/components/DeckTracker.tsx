@@ -181,11 +181,11 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
   return (
     <div
       ref={cardRef}
-      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer", typeColors[card.type])}
+      className={cn("relative rounded-md border-l-4 px-3 py-2 transition-colors hover:brightness-125 cursor-pointer overflow-hidden", typeColors[card.type])}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="relative flex-shrink-0 w-6 h-6 flex items-center justify-center">
             <span className="absolute"><EnergyIcon size={22} /></span>
@@ -204,7 +204,7 @@ function MiniCard({ card, gameState }: { card: CardGroupEntry; gameState: GameSt
           </div>
         </div>
 
-        <div className="flex-shrink-0 text-right">
+        <div className="shrink-0 w-12 text-right">
           <div className="text-xs font-bold font-display text-accent">
             {card.drawOdds > 0 ? `${(card.drawOdds * 100).toFixed(1)}%` : "—"}
           </div>

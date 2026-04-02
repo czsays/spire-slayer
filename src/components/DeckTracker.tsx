@@ -355,13 +355,6 @@ export default function DeckTracker() {
 
           <BuffsBar gameState={gameState} />
 
-          <div className="px-3 py-1.5 border-b border-sidebar-border flex items-center gap-3 text-[10px] text-muted-foreground">
-            <span className="text-pile-draw flex items-center gap-0.5"><Layers size={9} /> Draw</span>
-            <span className="text-pile-hand flex items-center gap-0.5"><Hand size={9} /> Hand</span>
-            <span className="text-pile-discard flex items-center gap-0.5"><Archive size={9} /> Disc</span>
-            <span className="text-pile-exhaust flex items-center gap-0.5"><Trash2 size={9} /> Exh</span>
-            <span className="ml-auto text-accent font-bold">% = Draw Odds</span>
-          </div>
 
           <ScrollArea className="flex-1">
             <div className="p-2 flex flex-col gap-1.5">

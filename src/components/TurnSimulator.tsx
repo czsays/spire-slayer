@@ -30,9 +30,10 @@ function CardPlayRow({ play }: { play: CardPlay }) {
     <div className={cn("flex items-start gap-2 py-1.5 px-2 rounded border-l-2", borderClass, "bg-muted/30")}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="w-4 h-4 rounded-full bg-primary/30 border border-primary/50 flex items-center justify-center text-[9px] font-bold text-primary-foreground flex-shrink-0">
-            {play.cost}
+          <span className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+            <EnergyHexagon size={14} />
           </span>
+          <span className="text-[9px] font-bold text-foreground absolute">{play.cost}</span>
           <span className="text-[11px] font-semibold text-foreground truncate">{play.cardName}</span>
         </div>
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">

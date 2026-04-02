@@ -165,8 +165,8 @@ export default function TurnSimulator({ deck, gameState }: { deck: DeckCard[]; g
         <span className="text-[10px] font-display font-bold text-muted-foreground uppercase tracking-wider">
           Turn Options
         </span>
-        <span className="text-[10px] text-muted-foreground ml-auto">
-          {gameState.energy}E available
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground ml-auto">
+          {gameState.energy} <EnergyHexagon size={10} /> available
         </span>
       </div>
       {plans.map((plan, i) => (

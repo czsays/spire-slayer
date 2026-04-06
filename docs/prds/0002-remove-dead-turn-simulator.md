@@ -25,11 +25,19 @@ Delete the two files. No replacement UI or logic is needed — `src/engine/` alr
 
 ## Acceptance Criteria
 
+<<<<<<< HEAD
 - [x] `src/data/turnSimulator.ts` is deleted from the repository.
 - [x] `src/components/TurnSimulator.tsx` is deleted from the repository.
 - [x] No remaining file imports from either deleted path (verified by a codebase-wide search for "turnSimulator" and "TurnSimulator").
 - [x] The project builds successfully with no type errors.
 - [x] All existing tests pass without modification.
+=======
+- [ ] `src/data/turnSimulator.ts` is deleted from the repository.
+- [ ] `src/components/TurnSimulator.tsx` is deleted from the repository.
+- [ ] No remaining file imports from either deleted path (verified by a codebase-wide search for "turnSimulator" and "TurnSimulator").
+- [ ] The project builds successfully with no type errors.
+- [ ] All existing tests pass without modification.
+>>>>>>> origin/main
 
 ## Technical Approach
 

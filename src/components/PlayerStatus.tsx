@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useGameStateContext } from "@/contexts/GameStateContext";
-import { Heart, Coins, Zap } from "lucide-react";
+import { Heart, Coins } from "lucide-react";
 import EnergyIcon, { characterToClass } from "@/components/EnergyIcon";
 import PotionPill from "@/components/PotionPill";
 

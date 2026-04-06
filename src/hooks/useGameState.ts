@@ -243,11 +243,7 @@ export function useGameState(): UseGameStateResult {
         stateType: "combat",
         battleRound: 1,
         isPlayPhase: true,
-        potions: [
-          { id: "potion-0", name: "Fire Potion", description: "Deal 20 damage to a target enemy.", slot: 0, can_use: true },
-          { id: "potion-1", name: "Block Potion", description: "Gain 12 Block.", slot: 1, can_use: true },
-          { id: "potion-2", name: "Regen Potion", description: "Gain 5 Regen.", slot: 2, can_use: false },
-        ],
+        potions: [],
         enemyIntents: new Map(),
       },
     };

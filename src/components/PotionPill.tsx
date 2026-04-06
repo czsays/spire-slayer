@@ -12,7 +12,7 @@ export default function PotionPill({ potion }: { potion: AppPotion }) {
     if (showTooltip && ref.current) {
       const rect = ref.current.getBoundingClientRect();
       const tooltipWidth = 224; // w-56 = 14rem = 224px
-      const tooltipHeight = 100; // estimate
+      const tooltipHeight = 140; // estimate (name + description + status badge)
 
       let top = rect.bottom + 6;
       if (top + tooltipHeight > window.innerHeight) {
@@ -38,7 +38,6 @@ export default function PotionPill({ potion }: { potion: AppPotion }) {
       <span
         ref={ref}
         tabIndex={0}
-        role="button"
         className={cn(
           "text-[10px] px-1.5 py-0.5 rounded cursor-help transition-all truncate max-w-[10rem]",
           "hover:ring-1 hover:ring-muted-foreground/40",

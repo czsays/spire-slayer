@@ -1,6 +1,6 @@
 # 0005 — Non-Combat Sidebar Content
 
-**Status:** Ready
+**Status:** Implemented
 **Effort:** M
 **Confidence:** High
 

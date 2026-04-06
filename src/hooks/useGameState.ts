@@ -40,7 +40,7 @@ interface AppRelic {
   counter: number | null;
 }
 
-interface AppPotion {
+export interface AppPotion {
   id: string;
   name: string;
   description: string;

@@ -12,7 +12,8 @@ export default function RelicPill({ relic }: { relic: Relic }) {
       const rect = ref.current.getBoundingClientRect();
       let top = rect.bottom + 6;
       if (top + 80 > window.innerHeight) top = rect.top - 80;
-      setPos({ top, left: rect.left });
+      const left = Math.min(rect.left, window.innerWidth - 224 - 8);
+      setPos({ top, left });
     }
   }, [hovered]);
 

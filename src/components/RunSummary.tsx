@@ -1,12 +1,9 @@
 import { useMemo } from "react";
 import type { DeckCard } from "@/data/deckData";
 import type { GameState } from "@/data/gameState";
-import type { ExtendedGameInfo, AppPotion } from "@/hooks/useGameState";
+import type { ExtendedGameInfo } from "@/hooks/useGameState";
 import DeckSummary from "@/components/DeckSummary";
 import RelicList from "@/components/RelicList";
-import PotionPill from "@/components/PotionPill";
-import { Coins, FlaskConical } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 // ── State label derivation ──────────────────────────────────────
 
@@ -16,77 +13,55 @@ interface StateConfig {
   label: string;
   /** Show deck summary in prominent (larger) mode. */
   prominentDeck: boolean;
-  /** Show gold with visual emphasis. */
-  goldEmphasis: boolean;
-  /** Show held potion count alongside potions. */
-  showPotionCount: boolean;
 }
 
-function getStateConfig(stateType: StateType, extended: ExtendedGameInfo): StateConfig {
+function getStateConfig(stateType: StateType, act: number, floor: number): StateConfig {
   switch (stateType) {
     case "map":
     case "treasure":
       return {
-        label: `Map — Act ${extended.act}, Floor ${extended.floor}`,
+        label: `Map — Act ${act}, Floor ${floor}`,
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "card_reward":
       return {
         label: "Choosing Card Reward",
         prominentDeck: true,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "rewards":
       return {
         label: "Rewards",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "shop":
       return {
         label: "Shop",
         prominentDeck: false,
-        goldEmphasis: true,
-        showPotionCount: true,
       };
     case "rest_site":
       return {
         label: "Campfire",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "event":
       return {
         label: "Event",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "card_select":
       return {
         label: "Choosing Card",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "relic_select":
       return {
         label: "Choosing Relic",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     case "bundle_select":
       return {
         label: "Choosing Bundle",
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     default: {
       // Unknown / fallback — capitalize raw stateType
@@ -94,8 +69,6 @@ function getStateConfig(stateType: StateType, extended: ExtendedGameInfo): State
       return {
         label,
         prominentDeck: false,
-        goldEmphasis: false,
-        showPotionCount: false,
       };
     }
   }
@@ -111,13 +84,8 @@ interface RunSummaryProps {
 
 export default function RunSummary({ gameState, deck, extended }: RunSummaryProps) {
   const config = useMemo(
-    () => getStateConfig(extended.stateType, extended),
+    () => getStateConfig(extended.stateType, extended.act, extended.floor),
     [extended.stateType, extended.act, extended.floor]
-  );
-
-  const sortedPotions = useMemo(
-    () => [...extended.potions].sort((a, b) => a.slot - b.slot),
-    [extended.potions]
   );
 
   return (
@@ -129,42 +97,11 @@ export default function RunSummary({ gameState, deck, extended }: RunSummaryProp
         </span>
       </div>
 
-      {/* Gold — emphasized in shop */}
-      {config.goldEmphasis && (
-        <div className="flex items-center gap-2">
-          <Coins size={16} className="text-amber-400" />
-          <span className="text-base font-bold font-display text-amber-400">{extended.gold}</span>
-          <span className="text-[10px] text-muted-foreground">gold</span>
-        </div>
-      )}
-
       {/* Deck composition */}
       <DeckSummary deck={deck} prominent={config.prominentDeck} />
 
       {/* Relics */}
       <RelicList relics={gameState.relics} />
-
-      {/* Potions */}
-      {sortedPotions.length > 0 && (
-        <div className="space-y-1">
-          <div className="flex items-center gap-1.5">
-            <FlaskConical size={11} className="text-muted-foreground" />
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
-              Potions
-            </span>
-            {config.showPotionCount && (
-              <span className="text-[10px] text-muted-foreground ml-auto">
-                {sortedPotions.length} held
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {sortedPotions.map((potion) => (
-              <PotionPill key={potion.id} potion={potion} />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

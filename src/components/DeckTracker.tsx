@@ -347,7 +347,8 @@ const COMBAT_STATES = new Set(["combat", "hand_select"]);
 export default function DeckTracker() {
   const [cardsExpanded, setCardsExpanded] = useState(true);
   const { gameState, deck, extended } = useGameStateContext();
-  const grouped = useMemo(() => groupCards(deck), [deck]);
+  const isCombat = COMBAT_STATES.has(extended.stateType);
+  const grouped = useMemo(() => isCombat ? groupCards(deck) : [], [deck, isCombat]);
   const playerClass = characterToClass(extended.character);
 
   const startDrag = useCallback(async (e: React.MouseEvent) => {
@@ -364,6 +365,7 @@ export default function DeckTracker() {
   }, [deck]);
 
   const cardSummary = useMemo(() => {
+    if (!isCombat) return { totalAttacks: 0, totalSkills: 0, totalPowers: 0 };
     const attacks = grouped.filter((c) => c.type === "attack");
     const skills = grouped.filter((c) => c.type === "skill");
     const powers = grouped.filter((c) => c.type === "power");
@@ -371,9 +373,7 @@ export default function DeckTracker() {
     const totalSkills = skills.reduce((s, c) => s + c.totalCount, 0);
     const totalPowers = powers.reduce((s, c) => s + c.totalCount, 0);
     return { totalAttacks, totalSkills, totalPowers };
-  }, [grouped]);
-
-  const isCombat = COMBAT_STATES.has(extended.stateType);
+  }, [grouped, isCombat]);
   const isMenu = extended.stateType === "menu";
 
   return (
@@ -448,7 +448,10 @@ export default function DeckTracker() {
         </>
       ) : (
         <ScrollArea className="flex-1 w-full">
-          <PlayerStatus />
+          <PlayerStatus
+            goldEmphasis={extended.stateType === "shop"}
+            showPotionCount={extended.stateType === "shop"}
+          />
           <RunSummary gameState={gameState} deck={deck} extended={extended} />
         </ScrollArea>
       )}

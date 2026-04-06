@@ -60,13 +60,13 @@ describe("computeDeckSummary", () => {
   it("rounds average cost to one decimal place", () => {
     const deck: DeckCard[] = [
       makeCard({ id: "1", cost: 1 }),
-      makeCard({ id: "2", cost: 2 }),
-      makeCard({ id: "3", cost: 3 }),
+      makeCard({ id: "2", cost: 1 }),
+      makeCard({ id: "3", cost: 2 }),
     ];
 
     const summary = computeDeckSummary(deck);
-    // avg = (1 + 2 + 3) / 3 = 2.0
-    expect(summary.averageCost).toBe(2);
+    // avg = (1 + 1 + 2) / 3 = 1.333... → rounded to 1.3
+    expect(summary.averageCost).toBe(1.3);
   });
 
   it("handles deck with only curses and statuses (no playable cards for avg)", () => {

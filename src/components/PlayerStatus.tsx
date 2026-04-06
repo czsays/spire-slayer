@@ -1,11 +1,17 @@
+import { useMemo } from "react";
 import { useGameStateContext } from "@/contexts/GameStateContext";
 import { Heart, Coins, Zap } from "lucide-react";
 import EnergyIcon, { characterToClass } from "@/components/EnergyIcon";
+import PotionPill from "@/components/PotionPill";
 
 export default function PlayerStatus() {
   const { extended, gameState } = useGameStateContext();
   const playerClass = characterToClass(extended.character);
   const hpPercent = extended.maxHp > 0 ? (extended.currentHp / extended.maxHp) * 100 : 100;
+  const sortedPotions = useMemo(
+    () => [...extended.potions].sort((a, b) => a.slot - b.slot),
+    [extended.potions]
+  );
 
   const hpColor =
     hpPercent > 50 ? "bg-emerald-500" : hpPercent > 25 ? "bg-amber-500" : "bg-red-500";
@@ -52,15 +58,16 @@ export default function PlayerStatus() {
           <span className="text-[11px] font-bold text-amber-400">{extended.gold}</span>
         </div>
 
-        {/* Potions */}
-        {extended.potions.length > 0 && (
-          <div className="flex items-center gap-1 ml-auto">
-            <span className="text-[10px] text-muted-foreground">
-              {extended.potions.length} pot{extended.potions.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-        )}
       </div>
+
+      {/* Potions */}
+      {sortedPotions.length > 0 && (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {sortedPotions.map((potion) => (
+            <PotionPill key={potion.id} potion={potion} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

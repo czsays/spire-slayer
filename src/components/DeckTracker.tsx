@@ -7,7 +7,7 @@ import RecommendationPanel from "@/components/RecommendationPanel";
 import { useGameStateContext } from "@/contexts/GameStateContext";
 import { isTauri } from "@/lib/tauri";
 import { createPortal } from "react-dom";
-import { type DeckCard, type PileLocation, type CardType } from "@/data/deckData";
+import { type DeckCard, type PileLocation, type CardType, X_COST } from "@/data/deckData";
 import { computeCardEffects, type GameState, type Relic } from "@/data/gameState";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -196,7 +196,7 @@ function MiniCard({ card, gameState, playerClass }: { card: CardGroupEntry; game
         <div className="flex min-w-0 items-center gap-2">
           <span className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
             <span className="absolute"><EnergyIcon size={22} playerClass={playerClass} /></span>
-            <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
+            <span className="relative text-xs font-bold font-display text-white">{card.cost === X_COST ? "X" : card.cost}</span>
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex min-w-0 items-center gap-1.5">

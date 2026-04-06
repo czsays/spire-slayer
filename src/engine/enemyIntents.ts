@@ -39,29 +39,34 @@ export function estimateIncomingDamage(
   return total;
 }
 
+/**
+ * Known enemy base damage values. Ordered longest-pattern-first so that
+ * specific names (e.g. "gremlin nob") match before generic ones ("gremlin").
+ */
+const ENEMY_DAMAGE: [string, number][] = [
+  ["gremlin nob", 16],
+  ["fungi beast", 6],
+  ["spike slime", 8],
+  ["acid slime", 8],
+  ["slime boss", 35],
+  ["jaw worm", 11],
+  ["lagavulin", 18],
+  ["hexaghost", 6], // per hit
+  ["guardian", 32],
+  ["cultist", 6],
+  ["gremlin", 5],
+  ["looter", 10],
+  ["sentry", 9],
+  ["slaver", 12],
+  ["louse", 6],
+  ["nob", 16],
+];
+
 /** Heuristic damage estimate when no intent data is available */
 export function estimateEnemyDamage(enemy: EnemyState): number {
-  // Base damage estimate: 6-8 for most Act 1 enemies, plus strength
-  const baseDamage = 7 + enemy.strength;
-
-  // Known enemy patterns (Act 1)
   const lower = enemy.name.toLowerCase();
-
-  if (lower.includes("jaw worm")) return 11 + enemy.strength;
-  if (lower.includes("louse")) return 6 + enemy.strength;
-  if (lower.includes("cultist")) return 6 + enemy.strength;
-  if (lower.includes("acid slime")) return 8 + enemy.strength;
-  if (lower.includes("spike slime")) return 8 + enemy.strength;
-  if (lower.includes("fungi beast")) return 6 + enemy.strength;
-  if (lower.includes("looter")) return 10 + enemy.strength;
-  if (lower.includes("gremlin")) return 5 + enemy.strength;
-  if (lower.includes("sentry")) return 9 + enemy.strength;
-  if (lower.includes("slaver")) return 12 + enemy.strength;
-  if (lower.includes("nob")) return 16 + enemy.strength;
-  if (lower.includes("lagavulin")) return 18 + enemy.strength;
-  if (lower.includes("hexaghost")) return 6 + enemy.strength; // per hit
-  if (lower.includes("slime boss")) return 35 + enemy.strength;
-  if (lower.includes("guardian")) return 32 + enemy.strength;
-
-  return baseDamage;
+  for (const [pattern, base] of ENEMY_DAMAGE) {
+    if (lower.includes(pattern)) return base + enemy.strength;
+  }
+  return 7 + enemy.strength;
 }

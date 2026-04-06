@@ -42,6 +42,7 @@ Potions are sorted by `slot` to match the in-game layout.
 
 ## Acceptance Criteria
 
+<<<<<<< HEAD
 - [x] Each potion in `extended.potions` is rendered individually with its name visible without any interaction.
 - [x] Potions with `can_use: false` are visually distinct from usable potions (dashed border, not solely color).
 - [x] Hovering a potion pill shows a tooltip with: potion name, full description, and usability status.
@@ -49,6 +50,15 @@ Potions are sorted by `slot` to match the in-game layout.
 - [x] Pills wrap gracefully when names are long (text truncation with ellipsis).
 - [x] Tooltips do not clip outside the application window (reposition when near viewport edges).
 - [x] Each pill is keyboard-focusable and shows its tooltip on focus.
+=======
+- [ ] Each potion in `extended.potions` is rendered individually with its name visible without any interaction.
+- [ ] Potions with `can_use: false` are visually distinct from usable potions (dashed border, not solely color).
+- [ ] Hovering a potion pill shows a tooltip with: potion name, full description, and usability status.
+- [ ] The potion row is not rendered when the potions array is empty.
+- [ ] Pills wrap gracefully when names are long (text truncation with ellipsis).
+- [ ] Tooltips do not clip outside the application window (reposition when near viewport edges).
+- [ ] Each pill is keyboard-focusable and shows its tooltip on focus.
+>>>>>>> origin/main
 
 ## Technical Approach
 

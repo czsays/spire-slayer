@@ -54,10 +54,10 @@ export function estimateEnemyDamage(enemy: EnemyState): number {
   if (lower.includes("spike slime")) return 8 + enemy.strength;
   if (lower.includes("fungi beast")) return 6 + enemy.strength;
   if (lower.includes("looter")) return 10 + enemy.strength;
+  if (lower.includes("nob")) return 16 + enemy.strength;
   if (lower.includes("gremlin")) return 5 + enemy.strength;
   if (lower.includes("sentry")) return 9 + enemy.strength;
   if (lower.includes("slaver")) return 12 + enemy.strength;
-  if (lower.includes("nob")) return 16 + enemy.strength;
   if (lower.includes("lagavulin")) return 18 + enemy.strength;
   if (lower.includes("hexaghost")) return 6 + enemy.strength; // per hit
   if (lower.includes("slime boss")) return 35 + enemy.strength;

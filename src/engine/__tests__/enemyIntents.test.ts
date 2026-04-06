@@ -25,10 +25,13 @@ describe("estimateEnemyDamage — known enemies", () => {
   });
 
   it("Nob returns 16 + strength", () => {
-    // Note: "Gremlin Nob" would match the "gremlin" pattern first (5 + str).
-    // The "nob" pattern matches names like "Nob" without the "Gremlin" prefix.
     expect(estimateEnemyDamage(makeEnemy({ name: "Nob", strength: 0 }))).toBe(16);
     expect(estimateEnemyDamage(makeEnemy({ name: "Nob", strength: 2 }))).toBe(18);
+  });
+
+  it("Gremlin Nob returns 16 + strength (nob checked before gremlin)", () => {
+    expect(estimateEnemyDamage(makeEnemy({ name: "Gremlin Nob", strength: 0 }))).toBe(16);
+    expect(estimateEnemyDamage(makeEnemy({ name: "Gremlin Nob", strength: 3 }))).toBe(19);
   });
 
   it("Cultist returns 6 + strength", () => {

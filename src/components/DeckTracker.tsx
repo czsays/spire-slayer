@@ -196,7 +196,7 @@ function MiniCard({ card, gameState, playerClass }: { card: CardGroupEntry; game
         <div className="flex min-w-0 items-center gap-2">
           <span className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
             <span className="absolute"><EnergyIcon size={22} playerClass={playerClass} /></span>
-            <span className="relative text-xs font-bold font-display text-white">{card.cost}</span>
+            <span className="relative text-xs font-bold font-display text-white">{card.cost === -1 ? "X" : card.cost}</span>
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex min-w-0 items-center gap-1.5">

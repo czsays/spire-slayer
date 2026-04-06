@@ -119,7 +119,7 @@ function convertToDeckCards(appState: AppGameState): DeckCard[] {
   return allCards.map((card, idx) => ({
     id: card.id || `card-${idx}`,
     name: card.name,
-    cost: parseInt(card.cost) || 0,
+    cost: card.cost === "X" ? -1 : (parseInt(card.cost) || 0),
     type: cardTypeLookup(card.card_type),
     description: card.description,
     upgraded: card.is_upgraded,

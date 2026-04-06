@@ -57,9 +57,14 @@ export function cloneSimState(s: SimState): SimState {
   };
 }
 
-/** Get playable cards from hand (cost <= energy) */
+/** Get playable cards from hand (cost <= energy, X-cost cards need >= 1 energy) */
 export function getPlayableCards(state: SimState): SimCard[] {
-  return state.hand.filter((c) => c.cost <= state.energy && c.type !== "status" && c.type !== "curse");
+  return state.hand.filter((c) => {
+    if (c.type === "status" || c.type === "curse") return false;
+    // X-cost cards (sentinel -1) are playable when energy >= 1
+    if (c.cost === -1) return state.energy >= 1;
+    return c.cost <= state.energy;
+  });
 }
 
 /** Calculate damage for a base value given current state */
@@ -153,10 +158,15 @@ export function simulateCardPlay(state: SimState, cardId: string): CardPlayTarge
   if (cardIndex === -1) return null;
 
   const card = state.hand[cardIndex];
-  if (card.cost > state.energy) return null;
 
-  // Spend energy
-  state.energy -= card.cost;
+  // X-cost cards (sentinel -1) require at least 1 energy and consume all remaining
+  if (card.cost === -1) {
+    if (state.energy < 1) return null;
+    state.energy = 0;
+  } else {
+    if (card.cost > state.energy) return null;
+    state.energy -= card.cost;
+  }
 
   // Remove from hand
   state.hand.splice(cardIndex, 1);

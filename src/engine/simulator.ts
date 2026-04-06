@@ -1,3 +1,4 @@
+import { X_COST } from "@/data/deckData";
 import type { DeckCard } from "@/data/deckData";
 import type { GameState } from "@/data/gameState";
 import type { SimState, SimCard, SimEnemy, CardPlayTarget, PlaySequence } from "./types";
@@ -62,7 +63,7 @@ export function getPlayableCards(state: SimState): SimCard[] {
   return state.hand.filter((c) => {
     if (c.type === "status" || c.type === "curse") return false;
     // X-cost cards (sentinel -1) are playable when energy >= 1
-    if (c.cost === -1) return state.energy >= 1;
+    if (c.cost === X_COST) return state.energy >= 1;
     return c.cost <= state.energy;
   });
 }
@@ -160,7 +161,7 @@ export function simulateCardPlay(state: SimState, cardId: string): CardPlayTarge
   const card = state.hand[cardIndex];
 
   // X-cost cards (sentinel -1) require at least 1 energy and consume all remaining
-  if (card.cost === -1) {
+  if (card.cost === X_COST) {
     if (state.energy < 1) return null;
     state.energy = 0;
   } else {

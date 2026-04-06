@@ -1,6 +1,9 @@
 export type CardType = "attack" | "skill" | "power" | "status" | "curse";
 export type PileLocation = "draw" | "hand" | "discard" | "exhaust";
 
+/** Sentinel value for X-cost cards (spend all remaining energy) */
+export const X_COST = -1;
+
 export interface DeckCard {
   id: string;
   name: string;

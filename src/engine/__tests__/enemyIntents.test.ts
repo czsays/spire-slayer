@@ -1,20 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { estimateEnemyDamage } from "../enemyIntents";
-import type { EnemyState } from "@/data/gameState";
-
-function makeEnemy(overrides: Partial<EnemyState> = {}): EnemyState {
-  return {
-    id: "e1",
-    name: "Unknown",
-    hp: 20,
-    maxHp: 20,
-    block: 0,
-    vulnerable: 0,
-    weak: 0,
-    strength: 0,
-    ...overrides,
-  };
-}
+import { makeEnemy } from "./fixtures";
 
 // ─── Known enemy patterns ───────────────────────────────────────
 
@@ -29,7 +15,7 @@ describe("estimateEnemyDamage — known enemies", () => {
     expect(estimateEnemyDamage(makeEnemy({ name: "Nob", strength: 2 }))).toBe(18);
   });
 
-  it("Gremlin Nob returns 16 + strength (nob checked before gremlin)", () => {
+  it("Gremlin Nob returns 16 + strength (specific match beats generic gremlin)", () => {
     expect(estimateEnemyDamage(makeEnemy({ name: "Gremlin Nob", strength: 0 }))).toBe(16);
     expect(estimateEnemyDamage(makeEnemy({ name: "Gremlin Nob", strength: 3 }))).toBe(19);
   });

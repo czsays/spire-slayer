@@ -1,5 +1,5 @@
 import type { SimState, SimCard, SimEnemy } from "../types";
-import type { BuffState } from "@/data/gameState";
+import type { BuffState, EnemyState } from "@/data/gameState";
 
 /** Create a default BuffState with all zeros */
 export function makePlayer(overrides: Partial<BuffState> = {}): BuffState {
@@ -42,6 +42,21 @@ export function makeSimCard(overrides: Partial<SimCard> = {}): SimCard {
     type: "attack",
     description: "Deal 6 damage.",
     upgraded: false,
+    ...overrides,
+  };
+}
+
+/** Create a default EnemyState (for enemyIntents tests) */
+export function makeEnemy(overrides: Partial<EnemyState> = {}): EnemyState {
+  return {
+    id: "e1",
+    name: "Unknown",
+    hp: 20,
+    maxHp: 20,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
     ...overrides,
   };
 }

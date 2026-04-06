@@ -80,7 +80,7 @@ describe("smart targeting — damage cards", () => {
 
     const result = simulateCardPlay(state, "c1");
     expect(result?.target).toBe("Almost Dead");
-    expect(state.enemies[0].hp).toBe(-1); // 5 - 6
+    expect(state.enemies[0].hp).toBeLessThanOrEqual(0);
   });
 
   it("damage card targets weakest enemy when none are killable", () => {

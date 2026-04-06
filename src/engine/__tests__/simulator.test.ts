@@ -279,6 +279,19 @@ describe("simulateCardPlay — card effects", () => {
     expect(state.energy).toBe(1);
   });
 
+  it("plays card with unrecognized description (energy spent, no effect)", () => {
+    const state = makeSimState({
+      energy: 3,
+      enemies: [makeSimEnemy({ hp: 20 })],
+      hand: [makeSimCard({ id: "c1", cost: 1, description: "Something weird happens." })],
+    });
+    const result = simulateCardPlay(state, "c1");
+    expect(result).not.toBeNull();
+    expect(state.energy).toBe(2);
+    expect(state.enemies[0].hp).toBe(20);
+    expect(state.playerBlock).toBe(0);
+  });
+
   it("returns null for card not in hand", () => {
     const state = makeSimState({ hand: [] });
     const result = simulateCardPlay(state, "nonexistent");

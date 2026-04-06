@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Potion Display - Design Options</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #09090b;
+    color: #ffffff;
+    padding: 32px;
+  }
+  h1 { font-size: 20px; margin-bottom: 8px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 2px; }
+  h2 { font-size: 15px; margin: 32px 0 12px; color: #ffffff; }
+  h3 { font-size: 12px; margin: 16px 0 8px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; }
+  .description { font-size: 13px; color: #a1a1aa; margin-bottom: 24px; max-width: 600px; line-height: 1.5; }
+  .options { display: flex; gap: 32px; flex-wrap: wrap; }
+  .option-card {
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    border-radius: 8px;
+    padding: 16px;
+    width: 320px;
+    flex-shrink: 0;
+  }
+  .option-label {
+    font-size: 11px;
+    color: #3b82f6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .rec { display: inline-block; background: #22c55e; color: #09090b; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 700; text-transform: uppercase; }
+
+  /* --- Simulated sidebar sections --- */
+  .sidebar-section {
+    border-bottom: 1px solid #27272a;
+    padding: 8px 12px;
+  }
+  .sidebar-section .section-label {
+    font-size: 10px;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .player-name { font-size: 12px; font-weight: 700; }
+  .hp-text { font-size: 11px; font-weight: 700; color: #f87171; }
+  .hp-bar { height: 8px; width: 100%; border-radius: 99px; background: #27272a; overflow: hidden; margin-bottom: 8px; }
+  .hp-fill { height: 100%; width: 75%; border-radius: 99px; background: #22c55e; }
+  .stats-row { display: flex; align-items: center; gap: 16px; font-size: 11px; }
+  .stat { display: flex; align-items: center; gap: 4px; }
+  .stat-icon { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .energy-icon { background: #3b82f6; }
+  .gold-icon { background: #fbbf24; }
+  .gold-val { color: #fbbf24; font-weight: 700; }
+  .muted { color: #a1a1aa; font-size: 10px; }
+
+  /* --- Option A: Pill badges (inline) --- */
+  .potion-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .potion-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: #27272a;
+    color: #ffffff;
+    cursor: help;
+    transition: background 0.15s;
+  }
+  .potion-pill:hover { background: #3f3f46; }
+  .potion-pill.disabled {
+    color: #52525b;
+    background: #18181b;
+    border: 1px dashed #3f3f46;
+  }
+  .potion-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .dot-fire { background: #ef4444; }
+  .dot-block { background: #60a5fa; }
+  .dot-regen { background: #22c55e; }
+  .dot-strength { background: #f59e0b; }
+  .dot-disabled { background: #52525b; }
+
+  /* --- Option B: Compact list --- */
+  .potion-list { margin-top: 6px; }
+  .potion-list-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+    font-size: 11px;
+    cursor: help;
+  }
+  .potion-list-item:hover { background: rgba(63,63,70,0.3); margin: 0 -12px; padding: 3px 12px; border-radius: 4px; }
+  .potion-list-item.disabled .potion-list-name { color: #52525b; }
+  .potion-list-name { font-weight: 600; }
+  .potion-list-tag {
+    font-size: 9px;
+    color: #52525b;
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  /* --- Tooltip simulation --- */
+  .tooltip-demo {
+    position: relative;
+    display: inline-block;
+  }
+  .tooltip-box {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    border-radius: 8px;
+    padding: 10px 12px;
+    width: 220px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-top: 8px;
+  }
+  .tooltip-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .tooltip-desc {
+    font-size: 11px;
+    color: #a1a1aa;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .tooltip-status {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .tooltip-usable { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .tooltip-unusable { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+  /* --- Summary panel --- */
+  .summary-panel {
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 40px;
+    max-width: 640px;
+  }
+  .summary-panel h2 { margin-top: 0; }
+  .summary-panel p { font-size: 13px; color: #a1a1aa; line-height: 1.6; margin-top: 8px; }
+  .pro-con { display: flex; gap: 24px; margin-top: 12px; }
+  .pro-con div { flex: 1; }
+  .pro-con h4 { font-size: 11px; color: #22c55e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .pro-con .con h4 { color: #ef4444; }
+  .pro-con ul { list-style: none; font-size: 12px; color: #a1a1aa; }
+  .pro-con ul li { padding: 2px 0; }
+  .pro-con ul li::before { content: "- "; color: #52525b; }
+</style>
+</head>
+<body>
+
+<h1>Potion Display in PlayerStatus</h1>
+<p class="description">
+  Replacing "2 pots" with individual potion identities. The sidebar is ~320px wide, so horizontal space is tight.
+  Below are two layout options shown within the existing PlayerStatus component structure.
+</p>
+
+<!-- ============================================ -->
+<h2>Decision 1: Layout format</h2>
+
+<div class="options">
+
+  <!-- Option A -->
+  <div class="option-card">
+    <div class="option-label">Option A: Pill badges <span class="rec">Recommended</span></div>
+    <div class="sidebar-section">
+      <div class="player-row">
+        <span class="player-name">Ironclad</span>
+        <span class="hp-text">60/80</span>
+      </div>
+      <div class="hp-bar"><div class="hp-fill"></div></div>
+      <div class="stats-row">
+        <div class="stat"><span class="stat-icon energy-icon"></span> 3 <span class="muted">/ 3</span></div>
+        <div class="stat"><span class="stat-icon gold-icon"></span> <span class="gold-val">142</span></div>
+      </div>
+      <div class="potion-pills">
+        <span class="potion-pill"><span class="potion-dot dot-fire"></span> Fire Potion</span>
+        <span class="potion-pill"><span class="potion-dot dot-block"></span> Block Potion</span>
+        <span class="potion-pill disabled"><span class="potion-dot dot-disabled"></span> Regen Potion</span>
+      </div>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      Compact horizontal layout. Wraps naturally. Matches the existing RelicPill pattern used in DeckTracker.
+      Colored dot hints at potion type. Disabled potions shown with dashed border and dimmed text.
+    </p>
+  </div>
+
+  <!-- Option B -->
+  <div class="option-card">
+    <div class="option-label">Option B: Compact list</div>
+    <div class="sidebar-section">
+      <div class="player-row">
+        <span class="player-name">Ironclad</span>
+        <span class="hp-text">60/80</span>
+      </div>
+      <div class="hp-bar"><div class="hp-fill"></div></div>
+      <div class="stats-row">
+        <div class="stat"><span class="stat-icon energy-icon"></span> 3 <span class="muted">/ 3</span></div>
+        <div class="stat"><span class="stat-icon gold-icon"></span> <span class="gold-val">142</span></div>
+      </div>
+      <div class="potion-list">
+        <div class="potion-list-item">
+          <span class="potion-dot dot-fire"></span>
+          <span class="potion-list-name">Fire Potion</span>
+        </div>
+        <div class="potion-list-item">
+          <span class="potion-dot dot-block"></span>
+          <span class="potion-list-name">Block Potion</span>
+        </div>
+        <div class="potion-list-item disabled">
+          <span class="potion-dot dot-disabled"></span>
+          <span class="potion-list-name" style="color:#52525b">Regen Potion</span>
+          <span class="potion-list-tag">can't use</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      Vertical list takes more height but is scannable and accommodates long potion names. Shows "can't use" inline.
+      Better if potions regularly exceed 3 slots.
+    </p>
+  </div>
+
+</div>
+
+<!-- ============================================ -->
+<h2>Decision 2: Disabled potion treatment</h2>
+<p class="description">How "can_use: false" potions appear. Both options apply to either layout above.</p>
+
+<div class="options">
+  <div class="option-card">
+    <div class="option-label">Dimmed + dashed border <span class="rec">Recommended</span></div>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+      <span class="potion-pill"><span class="potion-dot dot-fire"></span> Fire Potion</span>
+      <span style="color:#3f3f46; font-size:20px;">vs</span>
+      <span class="potion-pill disabled"><span class="potion-dot dot-disabled"></span> Fire Potion</span>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      Clearly communicates "present but not actionable" without hiding the potion entirely.
+      The dashed border differentiates from missing/empty slots.
+    </p>
+  </div>
+
+  <div class="option-card">
+    <div class="option-label">Reduced opacity only</div>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+      <span class="potion-pill"><span class="potion-dot dot-fire"></span> Fire Potion</span>
+      <span style="color:#3f3f46; font-size:20px;">vs</span>
+      <span class="potion-pill" style="opacity:0.35;"><span class="potion-dot dot-fire"></span> Fire Potion</span>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      Simpler but may not pass contrast requirements at low opacity against the dark background.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>Tooltip content (on hover)</h2>
+
+<div class="options">
+  <div class="option-card">
+    <div class="option-label">Tooltip structure</div>
+    <div class="tooltip-demo">
+      <span class="potion-pill"><span class="potion-dot dot-fire"></span> Fire Potion</span>
+      <div class="tooltip-box">
+        <div class="tooltip-title">Fire Potion</div>
+        <div class="tooltip-desc">Deal 20 damage to target enemy.</div>
+        <span class="tooltip-status tooltip-usable">Ready to use</span>
+      </div>
+    </div>
+    <div class="tooltip-demo" style="margin-top: 16px;">
+      <span class="potion-pill disabled"><span class="potion-dot dot-disabled"></span> Regen Potion</span>
+      <div class="tooltip-box">
+        <div class="tooltip-title">Regen Potion</div>
+        <div class="tooltip-desc">Heal 5 HP at the end of each turn for 5 turns.</div>
+        <span class="tooltip-status tooltip-unusable">Cannot use now</span>
+      </div>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      Follows the same portal-based tooltip pattern as RelicPill.
+      Shows: potion name (bold), description, and usability status badge.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>Empty state</h2>
+<div class="options">
+  <div class="option-card">
+    <div class="option-label">No potions</div>
+    <div class="sidebar-section">
+      <div class="stats-row">
+        <div class="stat"><span class="stat-icon energy-icon"></span> 3 <span class="muted">/ 3</span></div>
+        <div class="stat"><span class="stat-icon gold-icon"></span> <span class="gold-val">142</span></div>
+        <span class="muted" style="margin-left:auto;">No potions</span>
+      </div>
+    </div>
+    <p style="font-size:11px; color:#a1a1aa; margin-top:10px; line-height:1.4;">
+      When the potions array is empty, the potion row disappears entirely (current behavior already
+      conditionally renders). No change needed here.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="summary-panel">
+  <h2>Recommendation Summary</h2>
+  <p>
+    <strong>Use Option A (pill badges)</strong> with the dimmed + dashed border treatment for disabled potions.
+    This reuses the exact visual and interaction pattern already established by RelicPill in DeckTracker.tsx:
+    compact rounded pills with portal-based hover tooltips. It is space-efficient for the narrow sidebar, wraps
+    gracefully for 1-3 potions (the game maximum is typically 3 slots), and requires no new interaction patterns.
+  </p>
+  <div class="pro-con">
+    <div>
+      <h4>Strengths</h4>
+      <ul>
+        <li>Consistent with existing RelicPill pattern</li>
+        <li>Compact: fits 3 potions in one row at sidebar width</li>
+        <li>Hover tooltip reuses portal pattern from DeckTracker</li>
+        <li>Disabled state is accessible (not just opacity)</li>
+      </ul>
+    </div>
+    <div class="con">
+      <h4>Trade-offs</h4>
+      <ul>
+        <li>Very long potion names may truncate at narrow widths</li>
+        <li>No room for description inline (tooltip-only)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

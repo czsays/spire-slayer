@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { generateTurnPlans, type TurnPlan, type CardPlay } from "@/data/turnSimulator";
-import type { DeckCard } from "@/data/deckData";
+import { type DeckCard, X_COST } from "@/data/deckData";
 import type { GameState } from "@/data/gameState";
 import { Swords, Shield, Sparkles, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ function CardPlayRow({ play }: { play: CardPlay }) {
         <div className="flex items-center gap-1.5">
           <span className="relative w-4 h-4 flex items-center justify-center flex-shrink-0">
             <EnergyIcon size={14} />
-            <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-white">{play.cost}</span>
+            <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-white">{play.cost === X_COST ? "X" : play.cost}</span>
           </span>
           <span className="text-[11px] font-semibold text-foreground truncate">{play.cardName}</span>
         </div>

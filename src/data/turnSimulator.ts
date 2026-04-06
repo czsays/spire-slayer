@@ -1,3 +1,4 @@
+import { X_COST } from "./deckData";
 import type { DeckCard, CardType } from "./deckData";
 import type { GameState } from "./gameState";
 
@@ -108,10 +109,20 @@ function getCombinations(handCards: DeckCard[], maxEnergy: number): DeckCard[][]
     if (current.length > 0) {
       results.push([...current]);
     }
+    // If an X-cost card was played, energy is 0 and no more energy-costing cards can follow
     for (let i = start; i < handCards.length; i++) {
-      if (handCards[i].cost <= energyLeft) {
-        current.push(handCards[i]);
-        recurse(i + 1, current, energyLeft - handCards[i].cost);
+      const card = handCards[i];
+      if (card.cost === X_COST) {
+        // X-cost cards need >= 1 energy and consume all remaining
+        if (energyLeft >= 1) {
+          current.push(card);
+          // After X-cost, only 0-cost cards can follow (energy is 0)
+          recurse(i + 1, current, 0);
+          current.pop();
+        }
+      } else if (card.cost <= energyLeft) {
+        current.push(card);
+        recurse(i + 1, current, energyLeft - card.cost);
         current.pop();
       }
     }
@@ -155,16 +166,23 @@ export function generateTurnPlans(deck: DeckCard[], state: GameState, count = 5)
 
   // Only keep combos that use energy optimally: no unplayed card could fit in remaining energy
   const maximalCombos = uniqueCombos.filter((combo) => {
-    const usedEnergy = combo.reduce((s, c) => s + c.cost, 0);
+    const hasXCost = combo.some((c) => c.cost === X_COST);
+    // If an X-cost card is in the combo, it consumes all energy — remaining is 0
+    const usedEnergy = hasXCost
+      ? state.energy
+      : combo.reduce((s, c) => s + c.cost, 0);
     const remaining = state.energy - usedEnergy;
     const usedIds = new Set(combo.map((c) => c.id));
-    return !handCards.some((c) => !usedIds.has(c.id) && c.cost <= remaining);
+    return !handCards.some((c) => !usedIds.has(c.id) && c.cost <= remaining && c.cost !== X_COST);
   });
 
   // Build turn plans
   const plans: TurnPlan[] = maximalCombos.map((combo, idx) => {
     const cards = combo.map((c) => simulateCardPlay(c, state));
-    const totalEnergy = cards.reduce((s, c) => s + c.cost, 0);
+    const hasXCost = combo.some((c) => c.cost === X_COST);
+    const totalEnergy = hasXCost
+      ? state.energy
+      : cards.reduce((s, c) => s + c.cost, 0);
     const totalDamage = cards.reduce((s, c) => s + c.damage, 0);
     const totalBlock = cards.reduce((s, c) => s + c.block, 0);
     const allBuffs = cards.flatMap((c) => c.buffs);

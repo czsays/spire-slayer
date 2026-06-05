@@ -4,9 +4,11 @@ A native macOS companion app for **Slay the Spire 2** that runs alongside the ga
 
 Built with [Tauri v2](https://v2.tauri.app/) (Rust backend + React frontend).
 
+![Spire Slayer live recommendations](src/assets/game-screenshot.jpg)
+
 ## How It Works
 
-Spire Slayer connects to the [STS2MCP](https://github.com/yourusername/sts2mcp) mod's HTTP API, which exposes real-time game state from Slay the Spire 2. The Rust backend polls this API every 500ms, parses the JSON response, and pushes state updates to the React frontend via Tauri events.
+Spire Slayer requires the [STS2MCP mod](https://github.com/Gennadiyev/STS2MCP), which exposes a local HTTP API on port 15526 with real-time game state from Slay the Spire 2. The Rust backend polls this API every 500ms, parses the JSON response, and pushes state updates to the React frontend via Tauri events.
 
 During combat, a recommendation engine simulates all valid card play sequences, scores them using fight-context-aware heuristics, and surfaces the top 3 options with reasoning.
 
@@ -60,7 +62,7 @@ src/                 React frontend
 - **macOS 13+**
 - **Rust** (install via [rustup](https://rustup.rs/))
 - **Node.js 18+** and npm
-- **Slay the Spire 2** with the [STS2MCP mod](https://github.com/yourusername/sts2mcp) installed
+- **Slay the Spire 2** with the [STS2MCP mod](https://github.com/Gennadiyev/STS2MCP) installed (provides the HTTP game state API on port 15526)
   - Mod location: `~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app/Contents/MacOS/mods/`
 
 ## Development
@@ -112,8 +114,8 @@ The engine runs during combat when cards are in hand:
 - **Tailwind CSS** -- styling
 - **Vite** -- build tool and dev server
 - **Rust** -- backend (reqwest for HTTP, tokio for async, serde for JSON)
-- **STS2MCP** -- Slay the Spire 2 mod providing the HTTP game state API
+- **[STS2MCP](https://github.com/Gennadiyev/STS2MCP)** -- Slay the Spire 2 mod providing the HTTP game state API
 
 ## License
 
-Private project.
+[MIT](./LICENSE)

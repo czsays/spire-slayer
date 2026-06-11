@@ -1,5 +1,7 @@
 # Spire Slayer
 
+[![ci](https://github.com/czsays/spire-slayer/actions/workflows/ci.yml/badge.svg)](https://github.com/czsays/spire-slayer/actions/workflows/ci.yml)
+
 A native macOS companion app for **Slay the Spire 2** that runs alongside the game, displays live game state, and recommends optimal card plays each turn.
 
 Built with [Tauri v2](https://v2.tauri.app/) (Rust backend + React frontend).

@@ -8,10 +8,13 @@ import { useGameStateContext } from "@/contexts/GameStateContext";
 import { isTauri } from "@/lib/tauri";
 import { createPortal } from "react-dom";
 import { type DeckCard, type PileLocation, type CardType, X_COST } from "@/data/deckData";
-import { computeCardEffects, type GameState, type Relic } from "@/data/gameState";
+import { computeCardEffects, type GameState } from "@/data/gameState";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Layers, Archive, Trash2, Hand, Swords, Shield, Zap, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import RelicList from "@/components/RelicList";
+import RunSummary from "@/components/RunSummary";
+import MenuView from "@/components/MenuView";
 
 const pileConfig: Record<PileLocation, { label: string; icon: typeof Layers; colorClass: string }> = {
   draw: { label: "Draw Pile", icon: Layers, colorClass: "text-pile-draw" },
@@ -240,45 +243,7 @@ function MiniCard({ card, gameState, playerClass }: { card: CardGroupEntry; game
   );
 }
 
-// ── Relic pill with portal tooltip ────────────────────────────────
-
-function RelicPill({ relic }: { relic: Relic }) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-
-  useEffect(() => {
-    if (hovered && ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      let top = rect.bottom + 6;
-      if (top + 80 > window.innerHeight) top = rect.top - 80;
-      setPos({ top, left: rect.left });
-    }
-  }, [hovered]);
-
-  return (
-    <>
-      <span
-        ref={ref}
-        className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded cursor-help hover:bg-muted-foreground/20 hover:ring-1 hover:ring-muted-foreground/40 transition-all"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {relic.name}
-      </span>
-      {hovered && pos && createPortal(
-        <div
-          style={{ top: pos.top, left: pos.left }}
-          className="fixed z-[9999] w-56 rounded-lg border border-border bg-card shadow-xl shadow-black/40 p-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-150"
-        >
-          <p className="font-display text-xs font-semibold text-foreground">{relic.name}</p>
-          <p className="text-[11px] text-muted-foreground mt-1">{relic.description}</p>
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
+// RelicPill and RelicList extracted to standalone components for reuse
 
 // ── Buffs bar ────────────────────────────────────────────────────
 
@@ -367,25 +332,23 @@ function BuffsBar({ gameState }: { gameState: GameState }) {
       })}
 
       {/* Relics */}
-      {gameState.relics.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Relics:</span>
-          {gameState.relics.map((r) => (
-            <RelicPill key={r.id} relic={r} />
-          ))}
-        </div>
-      )}
+      <RelicList relics={gameState.relics} />
     </div>
   );
 }
 
+// ── State branching ─────────────────────────────────────────────
+
+/** Combat view: stateType is "combat" or "hand_select" (mid-combat overlay). */
+const COMBAT_STATES = new Set(["combat", "hand_select"]);
+
 // ── Main component ───────────────────────────────────────────────
 
 export default function DeckTracker() {
-  const [collapsed, setCollapsed] = useState(false);
   const [cardsExpanded, setCardsExpanded] = useState(true);
   const { gameState, deck, extended } = useGameStateContext();
-  const grouped = useMemo(() => groupCards(deck), [deck]);
+  const isCombat = COMBAT_STATES.has(extended.stateType);
+  const grouped = useMemo(() => isCombat ? groupCards(deck) : [], [deck, isCombat]);
   const playerClass = characterToClass(extended.character);
 
   const startDrag = useCallback(async (e: React.MouseEvent) => {
@@ -402,6 +365,7 @@ export default function DeckTracker() {
   }, [deck]);
 
   const cardSummary = useMemo(() => {
+    if (!isCombat) return { totalAttacks: 0, totalSkills: 0, totalPowers: 0 };
     const attacks = grouped.filter((c) => c.type === "attack");
     const skills = grouped.filter((c) => c.type === "skill");
     const powers = grouped.filter((c) => c.type === "power");
@@ -409,32 +373,38 @@ export default function DeckTracker() {
     const totalSkills = skills.reduce((s, c) => s + c.totalCount, 0);
     const totalPowers = powers.reduce((s, c) => s + c.totalCount, 0);
     return { totalAttacks, totalSkills, totalPowers };
-  }, [grouped]);
+  }, [grouped, isCombat]);
+  const isMenu = extended.stateType === "menu";
 
   return (
     <div
       className="relative flex h-screen w-full flex-col bg-sidebar border-r border-sidebar-border overflow-y-hidden"
     >
-        <>
-          <ConnectionStatus />
+      <ConnectionStatus />
 
-          <div className="p-3 border-b border-sidebar-border cursor-grab active:cursor-grabbing" onMouseDown={startDrag}>
-            <h1 className="font-display text-sm font-bold text-foreground tracking-wide uppercase pointer-events-none select-none">Spire Slayer</h1>
-            <div className="flex items-center gap-3 mt-2 pointer-events-none">
-              {(Object.entries(pileCounts) as [PileLocation, number][]).map(([pile, count]) => {
-                const config = pileConfig[pile];
-                const Icon = config.icon;
-                return (
-                  <div key={pile} className="flex items-center gap-1">
-                    <Icon size={13} className={config.colorClass} />
-                    <span className={cn("text-xs font-semibold", config.colorClass)}>{count}</span>
-                  </div>
-                );
-              })}
-              <span className="text-xs text-muted-foreground ml-auto">{deck.length} total</span>
-            </div>
+      <div className="p-3 border-b border-sidebar-border cursor-grab active:cursor-grabbing" onMouseDown={startDrag}>
+        <h1 className="font-display text-sm font-bold text-foreground tracking-wide uppercase pointer-events-none select-none">Spire Slayer</h1>
+        {isCombat && (
+          <div className="flex items-center gap-3 mt-2 pointer-events-none">
+            {(Object.entries(pileCounts) as [PileLocation, number][]).map(([pile, count]) => {
+              const config = pileConfig[pile];
+              const Icon = config.icon;
+              return (
+                <div key={pile} className="flex items-center gap-1">
+                  <Icon size={13} className={config.colorClass} />
+                  <span className={cn("text-xs font-semibold", config.colorClass)}>{count}</span>
+                </div>
+              );
+            })}
+            <span className="text-xs text-muted-foreground ml-auto">{deck.length} total</span>
           </div>
+        )}
+      </div>
 
+      {isMenu ? (
+        <MenuView />
+      ) : isCombat ? (
+        <>
           <PlayerStatus />
           <EnemyStatusList />
           <BuffsBar gameState={gameState} />
@@ -476,6 +446,15 @@ export default function DeckTracker() {
             <RecommendationPanel />
           </ScrollArea>
         </>
+      ) : (
+        <ScrollArea className="flex-1 w-full">
+          <PlayerStatus
+            goldEmphasis={extended.stateType === "shop"}
+            showPotionCount={extended.stateType === "shop"}
+          />
+          <RunSummary gameState={gameState} deck={deck} extended={extended} />
+        </ScrollArea>
+      )}
     </div>
   );
 }

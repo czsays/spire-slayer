@@ -1,10 +1,17 @@
 import { useMemo } from "react";
 import { useGameStateContext } from "@/contexts/GameStateContext";
-import { Heart, Coins } from "lucide-react";
+import { Heart, Coins, FlaskConical } from "lucide-react";
 import EnergyIcon, { characterToClass } from "@/components/EnergyIcon";
 import PotionPill from "@/components/PotionPill";
 
-export default function PlayerStatus() {
+interface PlayerStatusProps {
+  /** Show gold with larger, emphasized styling (e.g. in shop). */
+  goldEmphasis?: boolean;
+  /** Show held potion count alongside potions (e.g. in shop). */
+  showPotionCount?: boolean;
+}
+
+export default function PlayerStatus({ goldEmphasis = false, showPotionCount = false }: PlayerStatusProps) {
   const { extended, gameState } = useGameStateContext();
   const playerClass = characterToClass(extended.character);
   const hpPercent = extended.maxHp > 0 ? (extended.currentHp / extended.maxHp) * 100 : 100;
@@ -54,18 +61,39 @@ export default function PlayerStatus() {
 
         {/* Gold */}
         <div className="flex items-center gap-1">
-          <Coins size={12} className="text-amber-400" />
-          <span className="text-[11px] font-bold text-amber-400">{extended.gold}</span>
+          <Coins size={goldEmphasis ? 16 : 12} className="text-amber-400" />
+          <span className={goldEmphasis
+            ? "text-base font-bold font-display text-amber-400"
+            : "text-[11px] font-bold text-amber-400"
+          }>
+            {extended.gold}
+          </span>
+          {goldEmphasis && (
+            <span className="text-[10px] text-muted-foreground">gold</span>
+          )}
         </div>
 
       </div>
 
       {/* Potions */}
       {sortedPotions.length > 0 && (
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {sortedPotions.map((potion) => (
-            <PotionPill key={potion.id} potion={potion} />
-          ))}
+        <div className="space-y-1">
+          {showPotionCount && (
+            <div className="flex items-center gap-1.5">
+              <FlaskConical size={11} className="text-muted-foreground" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                Potions
+              </span>
+              <span className="text-[10px] text-muted-foreground ml-auto">
+                {sortedPotions.length} held
+              </span>
+            </div>
+          )}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {sortedPotions.map((potion) => (
+              <PotionPill key={potion.id} potion={potion} />
+            ))}
+          </div>
         </div>
       )}
     </div>
